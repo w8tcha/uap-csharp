@@ -1,7 +1,9 @@
 UserAgent Parser (based on ua_parser C# Library)
 ======================
 
-This is the ASP.NET Core implementation of [ua-parser](https://github.com/tobie/ua-parser). You can find the latest binaries on NuGet [here](https://www.nuget.org/packages/UAParser/).
+This is the ASP.NET Core implementation of [ua-parser](https://github.com/tobie/ua-parser).
+
+[![NuGet](https://img.shields.io/nuget/v/UAParser.Core.svg)](https://nuget.org/packages/UAParser.Core)
 
 [![build dotnet](https://github.com/w8tcha/uap-csharp/actions/workflows/build.yml/badge.svg)](https://github.com/w8tcha/uap-csharp/actions/workflows/build.yml)
 
