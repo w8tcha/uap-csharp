@@ -1,5 +1,5 @@
 {
-  "name": "useragent-parser",
+  "name": "uaparser.Core",
   "version": "4.0.0",
   "private": true,
   "devDependencies": {
