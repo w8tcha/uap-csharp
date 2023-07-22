@@ -35,7 +35,7 @@ Install the [UAParser.Core nuget package](https://www.nuget.org/packages/UAParse
 
 
 ````
-Install-Package Shyjus.BrowserDetector
+Install-Package UAParser.Core
 ````
 
 **Step 2:** Enable the browser detection service inside the `ConfigureServices` method of `Startup.cs`.
@@ -58,9 +58,9 @@ Example usage in controller code
 public class HomeController : Controller
 {
     private readonly IUserAgentParser userAgentParser;
-    public HomeController(IUserAgentParser browserDetector)
+    public HomeController(IUserAgentParser parser)
     {
-        this.userAgentParser = browserDetector;
+        this.userAgentParser = parser;
     }
     public IActionResult Index()
     {
@@ -75,12 +75,12 @@ public class HomeController : Controller
 Example usage in view code
 
 ```c#
-@inject UAParser.Interfaces.IUserAgentParser browserDetector
+@inject UAParser.Interfaces.IUserAgentParser parser
 
-<h2> @browserDetector.Browser.Family </h2>
-<h3> @browserDetector.Browser.Version </h3>
-<h3> @browserDetector.Browser.OS.ToString() </h3>
-<h3> @browserDetector.Browser.Device.ToString() </h3>
+<h2> @parser.ClientInfo.Family </h2>
+<h3> @parser.ClientInfo.Version </h3>
+<h3> @parser.ClientInfo.OS.ToString() </h3>
+<h3> @parser.ClientInfo.Device.ToString() </h3>
 
 ```
 
