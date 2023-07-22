@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\UAParser\UAParser.Core.csproj" />
+    <ProjectReference Include="..\UAParser.Core\UAParser.Core.csproj" />
   </ItemGroup>
 
 </Project>

@@ -19,9 +19,9 @@ public sealed class UserAgentParser : IUserAgentParser
     private const string UserAgent = "User-Agent";
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="BrowserDetector"/> class.
+    /// Initializes a new instance of the <see cref="UserAgentParser"/> class.
     /// </summary>
-    /// <param name="httpContextAccessor">The IHttpContextAccessor instance.</param>
+    /// <param name="httpContextAccessor">The HTTP context accessor.</param>
     public UserAgentParser(IHttpContextAccessor httpContextAccessor)
     {
         this.httpContextAccessor = httpContextAccessor;

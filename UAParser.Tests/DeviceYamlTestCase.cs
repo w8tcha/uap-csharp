@@ -1,11 +1,10 @@
-using System;
+namespace UAParser.Tests;
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UAParser.Objects;
+
 using Xunit;
 
-namespace UAParser.Tests;
+using UAParser.Objects;
 
 public class DeviceYamlTestCase : YamlTestCase
 {

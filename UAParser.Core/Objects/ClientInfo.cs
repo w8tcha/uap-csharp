@@ -1,6 +1,5 @@
 namespace UAParser.Objects;
 
-using System;
 using UAParser.Interfaces;
 
 /// <summary>

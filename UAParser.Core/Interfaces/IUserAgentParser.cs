@@ -1,5 +1,3 @@
-using UAParser.Objects;
-
 namespace UAParser.Interfaces;
 
 /// <summary>
