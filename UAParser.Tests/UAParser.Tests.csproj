@@ -41,7 +41,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\UAParser\UAParser.csproj" />
+    <ProjectReference Include="..\UAParser\UAParser.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

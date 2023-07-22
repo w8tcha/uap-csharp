@@ -10,7 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Items", "Items", "{AB82C54B
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UAParser", "UAParser\UAParser.csproj", "{12CB7D5C-E7A6-4B7F-BA64-D12D96F81E79}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UAParser.Core", "UAParser\UAParser.Core.csproj", "{12CB7D5C-E7A6-4B7F-BA64-D12D96F81E79}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UAParser.Tests", "UAParser.Tests\UAParser.Tests.csproj", "{754416BE-F962-4898-832A-739B0EF6C3CC}"
 EndProject

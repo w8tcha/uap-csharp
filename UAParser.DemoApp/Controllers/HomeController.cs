@@ -15,10 +15,10 @@ public class HomeController : ControllerBase
     
     private readonly IUserAgentParser userAgentParser;
 
-    public HomeController(IUserAgentParser browserDetector, ILogger<HomeController> logging)
+    public HomeController(IUserAgentParser parser, ILogger<HomeController> logging)
     {
         this.logger = logging ?? throw new ArgumentNullException(nameof(logging));
-        this.userAgentParser = browserDetector ?? throw new ArgumentNullException(nameof(browserDetector));
+        this.userAgentParser = parser ?? throw new ArgumentNullException(nameof(parser));
     }
 
     [HttpGet]
@@ -26,11 +26,11 @@ public class HomeController : ControllerBase
     {
         this.logger.LogInformation("Inside GET action method");
 
-        var browser = this.userAgentParser.ClientInfo;
+        var clientInfo = this.userAgentParser.ClientInfo;
 
         var userAgent = this.HttpContext.Request.Headers["User-Agent"];
 
         return
-            $".NET 7.0 APP. Browser:{browser.Browser.Family}, Version: {browser.Browser.Version}, Device type: {browser.Device.Family}, OS: {browser.OS}, Original User-Agent: {userAgent}";
+            $".NET 7.0 APP. Browser:{clientInfo.Browser.Family}, Version: {clientInfo.Browser.Version}, Device type: {clientInfo.Device.Family}, OS: {clientInfo.OS}, Original User-Agent: {userAgent}";
     }
 }

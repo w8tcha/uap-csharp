@@ -1,56 +1,113 @@
-ua_parser C# Library
+UserAgent Parser (based on ua_parser C# Library)
 ======================
 
-This is the CSharp implementation of [ua-parser](https://github.com/tobie/ua-parser). You can find the latest binaries on NuGet [here](https://www.nuget.org/packages/UAParser/).
+This is the ASP.NET Core implementation of [ua-parser](https://github.com/tobie/ua-parser). You can find the latest binaries on NuGet [here](https://www.nuget.org/packages/UAParser/).
 
-[![Build status](https://ci.appveyor.com/api/projects/status/ery4ydoxwtokgjkm?svg=true)](https://ci.appveyor.com/project/enemaerke/uap-csharp)
+[![build dotnet](https://github.com/w8tcha/uap-csharp/actions/workflows/build.yml/badge.svg)](https://github.com/w8tcha/uap-csharp/actions/workflows/build.yml)
 
-The implementation uses the shared regex patterns and overrides from regexes.yaml (found in [uap-core](https://github.com/ua-parser/uap-core)). The assembly embeds the latest regex patterns (enabled through a git submodule) which are loaded into the default parser. You can create a parser with more updated regex patterns by using the static methods on `Parser` to pass in specific patterns in yaml format.
+The implementation uses the shared regex patterns and overrides from regexes.yaml (found in [uap-core](https://github.com/ua-parser/uap-core)). The assembly embeds the latest regex patterns (enabled through a node module) which are loaded into the default parser. You can create a parser with more updated regex patterns by using the static methods on `Parser` to pass in specific patterns in yaml format.
 
-Build and Run Tests:
+## Build and Run Tests
 ------
-Make sure you pull down the submodules that includes the yaml files (otherwise you won't be able to compile):
+You can then build and run the tests by
 
-	git submodule update --init --recursive
+````
+dotnet restore
 
-You can then build and run the tests by invoking the `build.bat` script
-
-    .\build.bat
+dotnet test
+````
 
 Update the embedded regexes
 ------
 To pull the latest regexes into the project:
 
-	cd uap-core
-	git pull origin master
+````
+    npm install
+	grunt
+````
+
+## How to use ?
+
+**Step 1:**
+Install the [UAParser.Core nuget package](https://www.nuget.org/packages/UAParser.Core/)
 
 
-Usage:
---------
-```csharp
-  using UAParser;
+````
+Install-Package Shyjus.BrowserDetector
+````
 
-...
+**Step 2:** Enable the browser detection service inside the `ConfigureServices` method of `Startup.cs`.
 
-  string uaString = "Mozilla/5.0 (iPhone; CPU iPhone OS 5_1_1 like Mac OS X) AppleWebKit/534.46 (KHTML, like Gecko) Version/5.1 Mobile/9B206 Safari/7534.48.3";
+```c#
+public void ConfigureServices(IServiceCollection services)
+{
+    // Add user agent service
+    services.AddUserAgentParser();
 
-  // get a parser with the embedded regex patterns
-  var uaParser = Parser.GetDefault();
+    services.AddMvc();
+}
+```
 
-  // get a parser using externally supplied yaml definitions
-  // var uaParser = Parser.FromYaml(yamlString);
+**Step 3:** Inject `IUserAgentParser` to your controller class or view file or middleware and access the `ClientInfo` property.
 
-  ClientInfo c = uaParser.Parse(uaString);
+Example usage in controller code
 
-  Console.WriteLine(c.UA.Family); // => "Mobile Safari"
-  Console.WriteLine(c.UA.Major);  // => "5"
-  Console.WriteLine(c.UA.Minor);  // => "1"
+```c#
+public class HomeController : Controller
+{
+    private readonly IUserAgentParser userAgentParser;
+    public HomeController(IUserAgentParser browserDetector)
+    {
+        this.userAgentParser = browserDetector;
+    }
+    public IActionResult Index()
+    {
+        var clientInfo = this.userAgentParser.ClientInfo;
+        // Use ClientInfo object as needed.
 
-  Console.WriteLine(c.OS.Family);        // => "iOS"
-  Console.WriteLine(c.OS.Major);         // => "5"
-  Console.WriteLine(c.OS.Minor);         // => "1"
+        return View();
+    }
+}
+```
 
-  Console.WriteLine(c.Device.Family);    // => "iPhone"
+Example usage in view code
+
+```c#
+@inject UAParser.Interfaces.IUserAgentParser browserDetector
+
+<h2> @browserDetector.Browser.Family </h2>
+<h3> @browserDetector.Browser.Version </h3>
+<h3> @browserDetector.Browser.OS.ToString() </h3>
+<h3> @browserDetector.Browser.Device.ToString() </h3>
+
+```
+
+Example usage in custom middlware
+
+You can inject the `IUserAgentParser` to the `InvokeAsync` method.
+
+```c#
+public class MyCustomMiddleware
+{
+    private RequestDelegate next;
+    public MyCustomMiddleware(RequestDelegate next)
+    {
+        this.next = next;
+    }
+    public async Task InvokeAsync(HttpContext httpContext, IUserAgentParser parser)
+    {
+        var clientInfo = parser.ClientInfo;
+
+        if (clientInfo.Browser.Family == "Edge")
+        {
+            await httpContext.Response.WriteAsync("Have you tried the new chromuim based edge ?");
+        }
+        else
+        {
+            await this.next.Invoke(httpContext);
+        }
+    }
+}
 ```
 
 Authors:
