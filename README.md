@@ -12,9 +12,9 @@ The implementation uses the shared regex patterns and overrides from regexes.yam
 You can then build and run the tests by
 
 ````
-dotnet restore
+dotnet restore UAParser.Core.sln
 
-dotnet test
+dotnet test UAParser.Core.sln
 ````
 
 Update the embedded regexes

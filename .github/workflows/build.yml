@@ -19,8 +19,8 @@ jobs:
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
       - name: Install dependencies
-        run: dotnet restore
+        run: dotnet restore UAParser.Core.sln
       - name: Build
-        run: dotnet build
+        run: dotnet build UAParser.Core.sln
       - name: Test
-        run: dotnet test
+        run: dotnet test UAParser.Core.sln
