@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
-    <PackageId>UAParser</PackageId>
+    <PackageId>UAParser.Core</PackageId>
     <Authors>Søren Enemærke</Authors>
-    <Title>User Agent Parser for .Net</Title>
-    <Description>Parsing useragent string. A .Net wrapper for the ua-parser library and its set of regular expressions</Description>
+    <Title>User Agent Parser for .NET Core</Title>
+    <Description>Parsing UserAgent string. A .NET Core wrapper for the ua-parser library and its set of regular expressions</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Copyright>Copyright Søren Enemærke</Copyright>
     <PackageTags>UAParser .Net Core UserAgent Parsing User Agent Parser</PackageTags>
@@ -23,6 +23,8 @@
     <Company />
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>../PublicKey.snk</AssemblyOriginatorKeyFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>
@@ -31,6 +33,13 @@
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
