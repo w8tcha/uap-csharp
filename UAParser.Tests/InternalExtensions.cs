@@ -5,41 +5,38 @@ using System.Linq;
 using System.Text;
 using YamlDotNet.RepresentationModel;
 
-namespace UAParser.Tests
+namespace UAParser.Tests;
+
+internal static class InternalExtensions
 {
-    internal static class InternalExtensions
+    internal static List<Dictionary<string, string>> ConvertToDictionaryList(this YamlSequenceNode yamlNode)
     {
-        internal static List<Dictionary<string, string>> ConvertToDictionaryList(this YamlSequenceNode yamlNode)
+        var list = new List<Dictionary<string, string>>();
+        foreach (var item in yamlNode.OfType<YamlMappingNode>())
         {
-            List<Dictionary<string, string>> list = new List<Dictionary<string, string>>();
-            foreach (var item in yamlNode.OfType<YamlMappingNode>())
-            {
-                list.Add(ConvertToDictionary(item));
-            }
-            return list;
+            list.Add(ConvertToDictionary(item));
         }
 
-        internal static Dictionary<string, string> ConvertToDictionary(this YamlMappingNode yamlNode)
+        return list;
+    }
+
+    internal static Dictionary<string, string> ConvertToDictionary(this YamlMappingNode yamlNode)
+    {
+        var dic = new Dictionary<string, string>();
+        foreach (var key in yamlNode.Children.Keys)
         {
-            Dictionary<string, string> dic = new Dictionary<string, string>();
-            foreach (var key in yamlNode.Children.Keys)
-            {
-                dic[key.ToString()] = yamlNode.Children[key].ToString();
-            }
-            return dic;
+            dic[key.ToString()] = yamlNode.Children[key].ToString();
         }
 
-        internal static string GetTestResources(this object self, string name)
-        {
-            using (Stream s = typeof(TestResourceTests).Assembly.GetManifestResourceStream(name))
-            {
-                if (s == null)
-                    throw new InvalidOperationException("Could not locate an embedded test resource with name: " + name);
-                using (StreamReader sr = new StreamReader(s, Encoding.UTF8))
-                {
-                    return sr.ReadToEnd();
-                }
-            }
-        }
+        return dic;
+    }
+
+    internal static string GetTestResources(this object self, string name)
+    {
+        using var s = typeof(TestResourceTests).Assembly.GetManifestResourceStream(name);
+        if (s == null)
+            throw new InvalidOperationException("Could not locate an embedded test resource with name: " + name);
+        using var sr = new StreamReader(s, Encoding.UTF8);
+        return sr.ReadToEnd();
     }
 }
