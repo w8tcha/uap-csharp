@@ -1,6 +1,7 @@
-namespace UAParser;
+namespace UAParser.Objects;
 
 using System;
+using UAParser.Interfaces;
 
 /// <summary>
 /// Represents the user agent client information resulting from parsing
@@ -26,27 +27,21 @@ public class ClientInfo : IUAParserOutput
     /// </summary>
     public Device Device { get; }
 
-    /// <summary>
-    /// The User Agent parsed from the user agent string
-    /// </summary>
-    [Obsolete("Mirrors the value of the UA property. Will be removed in future versions")]
-    public UserAgent UserAgent => this.UA;
-
     // ReSharper disable once InconsistentNaming
     /// <summary>
     /// The User Agent parsed from the user agent string
     /// </summary>
-    public UserAgent UA { get; }
+    public Browser Browser { get; }
 
     /// <summary>
     /// Constructs an instance of the ClientInfo with results of the user agent string parsing
     /// </summary>
-    public ClientInfo(string inputString, OS os, Device device, UserAgent userAgent)
+    public ClientInfo(string inputString, OS os, Device device, Browser userAgent)
     {
         this.String = inputString;
         this.OS = os;
         this.Device = device;
-        this.UA = userAgent;
+        this.Browser = userAgent;
     }
 
     /// <summary>
@@ -55,6 +50,6 @@ public class ClientInfo : IUAParserOutput
     /// <returns></returns>
     public override string ToString()
     {
-        return $"{this.OS} {this.Device} {this.UA}";
+        return $"{this.OS} {this.Device} {this.Browser}";
     }
 }

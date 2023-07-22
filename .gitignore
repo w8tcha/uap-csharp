@@ -62,3 +62,7 @@ packages/
 #Test files
 *.testsettings
 .vs
+
+
+node_modules/
+package-lock.json

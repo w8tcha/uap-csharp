@@ -1,4 +1,4 @@
-namespace UAParser;
+namespace UAParser.Extensions;
 
 using System;
 

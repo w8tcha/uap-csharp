@@ -1,6 +1,5 @@
 namespace UAParser;
 
-using System;
 using System.Linq;
 
 internal static class VersionString

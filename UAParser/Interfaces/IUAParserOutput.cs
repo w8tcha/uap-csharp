@@ -1,4 +1,6 @@
-namespace UAParser;
+using UAParser.Objects;
+
+namespace UAParser.Interfaces;
 
 /// <summary>
 /// Representing the parse results. Structure of this class aligns with the
@@ -27,5 +29,5 @@ public interface IUAParserOutput
     /// <summary>
     /// The User Agent parsed from the user agent string
     /// </summary>
-    UserAgent UA { get; }
+    Browser Browser { get; }
 }

@@ -7,6 +7,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
+using UAParser.Extensions;
+using UAParser.Objects;
+
 /// <summary>
 /// Represents a parser of a user agent string
 /// </summary>
@@ -22,7 +25,7 @@ public sealed class Parser
 
     private readonly Func<string, Device> _deviceParser;
 
-    private readonly Func<string, UserAgent> _userAgentParser;
+    private readonly Func<string, Browser> _userAgentParser;
 
     private Parser(MinimalYamlParser yamlParser, ParserOptions options)
     {
@@ -30,7 +33,7 @@ public sealed class Parser
 
         this._userAgentParser = CreateParser(
             Read(yamlParser.ReadMapping("user_agent_parsers"), config.UserAgentSelector),
-            new UserAgent(Other, null, null, null));
+            new Browser(Other, null, null, null));
         this._osParser = CreateParser(
             Read(yamlParser.ReadMapping("os_parsers"), config.OSSelector),
             new OS(Other, null, null, null, null));
@@ -102,7 +105,7 @@ public sealed class Parser
     /// <summary>
     /// Parse a user agent string and obtain the UserAgent information
     /// </summary>
-    public UserAgent ParseUserAgent(string uaString)
+    public Browser ParseUserAgent(string uaString)
     {
         return this._userAgentParser(uaString);
     }
@@ -147,7 +150,7 @@ public sealed class Parser
             return Parsers.OS(regex, os, v1, v2, v3, v4);
         }
 
-        public Func<string, UserAgent> UserAgentSelector(Func<string, string> indexer)
+        public Func<string, Browser> UserAgentSelector(Func<string, string> indexer)
         {
             var regex = this.Regex(indexer, "User agent");
             var family = indexer("family_replacement");
@@ -259,7 +262,7 @@ public sealed class Parser
                 select new Device(family, brand, model));
         }
 
-        public static Func<string, UserAgent> UserAgent(
+        public static Func<string, Browser> UserAgent(
             Regex regex,
             string familyReplacement,
             string majorReplacement,
@@ -272,7 +275,7 @@ public sealed class Parser
                 from v1 in Replace(majorReplacement, "$2")
                 from v2 in Replace(minorReplacement, "$3")
                 from v3 in Replace(patchReplacement, "$4")
-                select new UserAgent(family, v1, v2, v3));
+                select new Browser(family, v1, v2, v3));
         }
 
         private static Func<Match, IEnumerator<int>, string> Replace(string replacement)

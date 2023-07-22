@@ -1,4 +1,4 @@
-namespace UAParser;
+namespace UAParser.Objects;
 
 using System;
 
@@ -13,10 +13,8 @@ public sealed class Device
     public Device(string family, string brand, string model)
     {
         this.Family = family.Trim();
-        if (brand != null)
-            this.Brand = brand.Trim();
-        if (model != null)
-            this.Model = model.Trim();
+        if (brand != null) this.Brand = brand.Trim();
+        if (model != null) this.Model = model.Trim();
     }
 
     /// <summary>

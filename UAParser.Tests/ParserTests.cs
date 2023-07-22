@@ -8,6 +8,8 @@ using YamlDotNet.Core;
 
 namespace UAParser.Tests;
 
+using UAParser.Objects;
+
 public class ParserTests
 {
     [Fact]
@@ -29,7 +31,7 @@ public class ParserTests
     public void can_utilize_regex_timeouts()
     {
         var yamlContent = this.GetTestResources("UAParser.Tests.Regexes.backtracking.yaml");
-        var parser = Parser.FromYaml(yamlContent, new ParserOptions()
+        var parser = Parser.FromYaml(yamlContent, new ParserOptions
                                                       {
                                                           MatchTimeOut = TimeSpan.FromSeconds(1),
                                                       });

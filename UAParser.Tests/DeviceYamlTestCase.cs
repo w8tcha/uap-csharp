@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UAParser.Objects;
 using Xunit;
 
 namespace UAParser.Tests;
@@ -10,7 +11,7 @@ public class DeviceYamlTestCase : YamlTestCase
 {
     public static DeviceYamlTestCase ReadFromMap(Dictionary<string, string> map)
     {
-        var tc = new DeviceYamlTestCase()
+        var tc = new DeviceYamlTestCase
                      {
                          UserAgent = map["user_agent_string"],
                          Family = map["family"],
@@ -32,7 +33,7 @@ public class OSYamlTestCase : YamlTestCase
 {
     public static OSYamlTestCase ReadFromMap(Dictionary<string, string> map)
     {
-        var tc = new OSYamlTestCase()
+        var tc = new OSYamlTestCase
                      {
                          UserAgent = map["user_agent_string"],
                          Family = map["family"],
@@ -66,7 +67,7 @@ public class UserAgentYamlTestCase : YamlTestCase
 {
     public static UserAgentYamlTestCase ReadFromMap(Dictionary<string, string> map)
     {
-        var tc = new UserAgentYamlTestCase()
+        var tc = new UserAgentYamlTestCase
                      {
                          UserAgent = map["user_agent_string"],
                          Family = map["family"],
@@ -85,10 +86,10 @@ public class UserAgentYamlTestCase : YamlTestCase
     public override void Verify(ClientInfo clientInfo)
     {
         Assert.NotNull(clientInfo);
-        this.AssertMatch(this.Family, clientInfo.UA.Family, "Family");
-        this.AssertMatch(this.Major, clientInfo.UA.Major, "Major");
-        this.AssertMatch(this.Minor, clientInfo.UA.Minor, "Minor");
-        this.AssertMatch(this.Patch, clientInfo.UA.Patch, "Patch");
+        this.AssertMatch(this.Family, clientInfo.Browser.Family, "Family");
+        this.AssertMatch(this.Major, clientInfo.Browser.Major, "Major");
+        this.AssertMatch(this.Minor, clientInfo.Browser.Minor, "Minor");
+        this.AssertMatch(this.Patch, clientInfo.Browser.Patch, "Patch");
 
     }
 }

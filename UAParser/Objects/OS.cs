@@ -1,4 +1,4 @@
-namespace UAParser;
+namespace UAParser.Objects;
 
 /// <summary>
 /// Represents the operating system the user agent runs on
@@ -51,6 +51,6 @@ public sealed class OS
     public override string ToString()
     {
         var version = VersionString.Format(this.Major, this.Minor, this.Patch, this.PatchMinor);
-        return this.Family + (!string.IsNullOrEmpty(version) ? " " + version : null);
+        return this.Family + (!string.IsNullOrEmpty(version) ? $" {version}" : null);
     }
 }

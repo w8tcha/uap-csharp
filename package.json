@@ -1,0 +1,10 @@
+{
+  "name": "useragent-parser",
+  "version": "4.0.0",
+  "private": true,
+  "devDependencies": {
+    "@w8tcha/grunt-dev-update": "^2.3.1",
+    "grunt": "^1.6.1",
+    "uap-core": "^0.18.0"
+  }
+}

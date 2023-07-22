@@ -79,7 +79,8 @@ internal class MinimalYamlParser
             {
                 var indexOfMappingColon = line.IndexOf(':');
                 if (indexOfMappingColon == -1)
-                    throw new ArgumentException("YamlParsing: Expecting mapping entry to contain a ':', at line " + lineCount);
+                    throw new ArgumentException(
+                        $"YamlParsing: Expecting mapping entry to contain a ':', at line {lineCount}");
                 var name = line[..indexOfMappingColon].Trim();
                 activeMapping = new Mapping();
                 this._mappings.Add(name, activeMapping);
@@ -88,7 +89,8 @@ internal class MinimalYamlParser
 
             // reading scalar entries into the active mapping
             if (activeMapping == null)
-                throw new ArgumentException("YamlParsing: Expecting mapping entry to contain a ':', at line " + lineCount);
+                throw new ArgumentException(
+                    $"YamlParsing: Expecting mapping entry to contain a ':', at line {lineCount}");
 
             var seqLine = line.Trim();
             if (seqLine[0] == '-')
@@ -99,7 +101,8 @@ internal class MinimalYamlParser
 
             var indexOfColon = seqLine.IndexOf(':');
             if (indexOfColon == -1)
-                throw new ArgumentException("YamlParsing: Expecting scalar mapping entry to contain a ':', at line " + lineCount);
+                throw new ArgumentException(
+                    $"YamlParsing: Expecting scalar mapping entry to contain a ':', at line {lineCount}");
 
             var key = seqLine[..indexOfColon].Trim();
             var value = ReadQuotedValue(seqLine[(indexOfColon + 1)..].Trim());

@@ -35,7 +35,8 @@ internal static class InternalExtensions
     {
         using var s = typeof(TestResourceTests).Assembly.GetManifestResourceStream(name);
         if (s == null)
-            throw new InvalidOperationException("Could not locate an embedded test resource with name: " + name);
+            throw new InvalidOperationException(
+                $"Could not locate an embedded test resource with name: {name}");
         using var sr = new StreamReader(s, Encoding.UTF8);
         return sr.ReadToEnd();
     }

@@ -1,4 +1,4 @@
-namespace UAParser;
+namespace UAParser.Objects;
 
 using System;
 using System.Text.RegularExpressions;

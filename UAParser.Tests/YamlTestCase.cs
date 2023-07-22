@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UAParser.Objects;
 using Xunit;
 
 namespace UAParser.Tests;
@@ -22,6 +23,7 @@ public abstract class YamlTestCase
                 return;
         }
 
-        Assert.True(expected.Equals(actual), type + " did not match. (expected:" + expected + " actual:" + actual + ")  in " + this.UserAgent);
+        Assert.True(expected.Equals(actual),
+            $"{type} did not match. (expected:{expected} actual:{actual})  in {this.UserAgent}");
     }
 }

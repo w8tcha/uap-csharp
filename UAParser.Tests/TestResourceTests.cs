@@ -82,7 +82,7 @@ public class TestResourceTests
             }
         }
 
-        Assert.True(0 == sb.Length, "Failed tests: " + Environment.NewLine + sb);
+        Assert.True(0 == sb.Length, $"Failed tests: {Environment.NewLine}{sb}");
     }
 
     public List<TTestCase> GetTestCases<TTestCase>(
