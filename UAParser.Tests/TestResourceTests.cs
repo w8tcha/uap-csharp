@@ -1,44 +1,69 @@
+//
+// Copyright Atif Aziz, Søren Enemærke
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+namespace UAParser.Tests;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Xunit;
-using Xunit.Sdk;
-using YamlDotNet.RepresentationModel;
 
-namespace UAParser.Tests;
+using YamlDotNet.RepresentationModel;
 
 public class TestResourceTests
 {
     [Fact]
     public void can_run_device_tests()
     {
-        this.RunTests("UAParser.Tests.TestResources.test_device.yaml", DeviceYamlTestCase.ReadFromMap);
+        this.RunTests(
+            "UAParser.Tests.TestResources.test_device.yaml",
+            DeviceYamlTestCase.ReadFromMap);
     }
 
     [Fact]
     public void can_run_additional_os_tests()
     {
-        this.RunTests("UAParser.Tests.TestResources.additional_os_tests.yaml", OSYamlTestCase.ReadFromMap);
+        this.RunTests(
+            "UAParser.Tests.TestResources.additional_os_tests.yaml",
+            OSYamlTestCase.ReadFromMap);
     }
 
     [Fact]
     public void can_run_firefox_user_agent_string_tests()
     {
-        this.RunTests("UAParser.Tests.TestResources.firefox_user_agent_strings.yaml", UserAgentYamlTestCase.ReadFromMap);
+        this.RunTests(
+            "UAParser.Tests.TestResources.firefox_user_agent_strings.yaml",
+            UserAgentYamlTestCase.ReadFromMap);
     }
 
     [Fact]
     public void can_run_pgts_browser_list_tests()
     {
-        this.RunTests("UAParser.Tests.TestResources.pgts_browser_list.yaml", UserAgentYamlTestCase.ReadFromMap);
+        this.RunTests(
+            "UAParser.Tests.TestResources.pgts_browser_list.yaml",
+            UserAgentYamlTestCase.ReadFromMap);
     }
 
     [Fact]
     public void can_run_user_agent_parser_tests()
     {
-        this.RunTests("UAParser.Tests.TestResources.test_ua.yaml", UserAgentYamlTestCase.ReadFromMap);
+        this.RunTests(
+            "UAParser.Tests.TestResources.test_ua.yaml",
+            UserAgentYamlTestCase.ReadFromMap);
     }
 
     [Fact]
@@ -49,17 +74,16 @@ public class TestResourceTests
 
     internal void RunTests<TTestCase>(
         string resourceName,
-        Func<Dictionary<string, string>, TTestCase> testCaseFunction) where TTestCase : YamlTestCase
+        Func<Dictionary<string, string>, TTestCase> testCaseFunction)
+        where TTestCase : YamlTestCase
     {
-        var testCases = this.GetTestCases(
-            resourceName,
-            "test_cases",
-            testCaseFunction);
+        var testCases = this.GetTestCases(resourceName, "test_cases", testCaseFunction);
 
         RunTestCases(testCases);
     }
 
-    private static void RunTestCases<TTestCase>(List<TTestCase> testCases) where TTestCase : YamlTestCase
+    private static void RunTestCases<TTestCase>(List<TTestCase> testCases)
+        where TTestCase : YamlTestCase
     {
         var parser = Parser.GetDefault();
         Assert.NotEmpty(testCases);
@@ -96,21 +120,16 @@ public class TestResourceTests
 
         // reading overall configurations
         var regexConfigNode = (YamlMappingNode)yaml.Documents[0].RootNode;
-        var regexConfig = new Dictionary<string, YamlNode>();
-        foreach (var entry in regexConfigNode.Children)
-        {
-            regexConfig.Add(((YamlScalarNode)entry.Key).Value, entry.Value);
-        }
+        var regexConfig = regexConfigNode.Children.ToDictionary(
+            entry => ((YamlScalarNode)entry.Key).Value,
+            entry => entry.Value);
 
         var testCasesNode = (YamlSequenceNode)regexConfig[yamlNodeName];
-        var testCases = testCasesNode.ConvertToDictionaryList()
-            .Select(configMap =>
-                {
-                    if (!configMap.ContainsKey("js_ua")) // we deliberately skip tests with js-user agents
-                        return testCaseFunction(configMap);
-                    return default;
-                })
-            .ToList();
+        var testCases = testCasesNode.ConvertToDictionaryList().Select(
+            configMap => !configMap.ContainsKey("js_ua")
+                             ? // we deliberately skip tests with js-user agents
+                             testCaseFunction(configMap)
+                             : default).ToList();
         return testCases;
     }
 }

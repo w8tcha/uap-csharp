@@ -1,10 +1,26 @@
+//
+// Copyright Atif Aziz, Søren Enemærke
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+namespace UAParser.Tests;
+
 using System;
 using System.IO;
 using System.Linq;
-using Xunit;
-using YamlDotNet.RepresentationModel;
 
-namespace UAParser.Tests;
+using YamlDotNet.RepresentationModel;
 
 public class YamlParsing
 {
@@ -47,7 +63,7 @@ public class YamlParsing
                            into node
                            where node != null
                            select node.Children
-                               .Where(e => e.Key is YamlScalarNode && e.Value is YamlScalarNode)
+                               .Where(e => e is { Key: YamlScalarNode, Value: YamlScalarNode })
                                .GroupBy(e => e.Key.ToString(), e => e.Value.ToString(), StringComparer.OrdinalIgnoreCase)
                                .ToDictionary(e => e.Key, e => e.Last(), StringComparer.OrdinalIgnoreCase)
                            into cm
