@@ -77,8 +77,8 @@ Example usage in view code
 ```c#
 @inject UAParser.Interfaces.IUserAgentParser parser
 
-<h2> @parser.ClientInfo.Family </h2>
-<h3> @parser.ClientInfo.Version </h3>
+<h2> @parser.ClientInfo.Browser.Family </h2>
+<h3> @parser.ClientInfo.Browser.Version </h3>
 <h3> @parser.ClientInfo.OS.ToString() </h3>
 <h3> @parser.ClientInfo.Device.ToString() </h3>
 

@@ -198,8 +198,8 @@ public sealed class Parser
             if (pattern.Contains(@"\_"))
                 pattern = pattern.Replace(@"\_", "_");
 
-            //Singleline: User agent strings do not contain newline characters. RegexOptions.Singleline improves performance.
-            //CultureInvariant: The interpretation of a user agent never depends on the current locale.
+            // Singleline: User agent strings do not contain newline characters. RegexOptions.Singleline improves performance.
+            // CultureInvariant: The interpretation of a user agent never depends on the current locale.
             var options = RegexOptions.Singleline | RegexOptions.CultureInvariant;
 
             if ("i".Equals(regexFlag))
@@ -311,8 +311,7 @@ public sealed class Parser
                        : Replace(replacement);
         }
 
-        private static readonly string[] _allReplacementTokens = new string[]
-                                                                     {
+        private static readonly string[] _allReplacementTokens = {
                                                                          "$1", "$2", "$3", "$4",
                                                                          "$5", "$6", "$7", "$8",
                                                                          "$9",

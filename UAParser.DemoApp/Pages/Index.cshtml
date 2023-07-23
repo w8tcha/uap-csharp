@@ -1,0 +1,43 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+@inject Interfaces.IUserAgentParser Parser
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <table class="table table-striped">
+            <tbody>
+            <tr>
+                <th scope="row">Browser Name</th>
+                <td>@Parser.ClientInfo.Browser.Family</td>
+            </tr>
+            <tr>
+                <th scope="row">Browser Version</th>
+                <td>@Parser.ClientInfo.Browser.Version</td>
+            </tr>
+            <tr>
+                <th scope="row">Device type</th>
+                <td colspan="2">@Parser.ClientInfo.Device.ToString()</td>
+            </tr>
+            <tr>
+                <th scope="row">OS</th>
+                <td colspan="2">@Parser.ClientInfo.OS.ToString()</td>
+            </tr>
+            <tr>
+                <th scope="row">User-agent header</th>
+                <td colspan="2">@Parser.ClientInfo.String</td>
+            </tr>
+            </tbody>
+        </table>
+
+
+    </div>
+</div>
