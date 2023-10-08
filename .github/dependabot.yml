@@ -1,7 +1,19 @@
 version: 2
 updates:
 - package-ecosystem: nuget
-  directory: "/"
+  directory: "/UAParser.Core"
+  schedule:
+    interval: daily
+    time: "04:00"
+  open-pull-requests-limit: 10
+ - package-ecosystem: nuget
+  directory: "/UAParser.DemoApp"
+  schedule:
+    interval: daily
+    time: "04:00"
+  open-pull-requests-limit: 10
+ - package-ecosystem: nuget
+  directory: "/UAParser.Tests"
   schedule:
     interval: daily
     time: "04:00"
