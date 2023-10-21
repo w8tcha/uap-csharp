@@ -135,10 +135,7 @@ internal static class Parsers
             {
                 var finalString = replacement;
 
-                if (!finalString.Contains('$'))
-                {
-                    return finalString;
-                }
+                if (!finalString.Contains('$')) return finalString;
 
                 var groups = m.Groups;
                 for (var i = 0; i < AllReplacementTokens.Length; i++)
@@ -151,8 +148,8 @@ internal static class Parsers
 
                         if (tokenNumber <= groups.Count)
                         {
-                            Group group;
-                            if ((group = groups[tokenNumber]).Success)
+                            var group = groups[tokenNumber];
+                            if (group.Success)
                             {
                                 replacementText = group.Value;
                             }
@@ -189,9 +186,10 @@ internal static class Parsers
                 }
 
                 var groups = m.Groups;
-                Group group;
+                var group = groups[num.Current];
+
                 return selector(
-                    num.Current <= groups.Count && (group = groups[num.Current]).Success
+                    num.Current <= groups.Count && group.Success
                         ? group.Value
                         : null);
             };
