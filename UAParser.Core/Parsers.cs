@@ -148,10 +148,15 @@ internal static class Parsers
                     if (finalString.Contains(token))
                     {
                         var replacementText = string.Empty;
-                        Group group;
-                        if (tokenNumber <= groups.Count
-                            && (group = groups[tokenNumber]).Success)
-                            replacementText = group.Value;
+
+                        if (tokenNumber <= groups.Count)
+                        {
+                            Group group;
+                            if ((group = groups[tokenNumber]).Success)
+                            {
+                                replacementText = group.Value;
+                            }
+                        }
 
                         finalString = ReplaceFunction(finalString, replacementText, token);
                     }

@@ -75,7 +75,7 @@ internal class Config
     private Regex Regex(string regex, string key, string regexFlag = null)
     {
         var pattern = regex
-                      ?? throw new Exception(
+                      ?? throw new ArgumentNullException(
                           $"{key} is missing regular expression specification.");
 
         // Singleline: User agent strings do not contain newline characters. RegexOptions.Singleline improves performance.
