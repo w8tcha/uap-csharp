@@ -15,12 +15,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="TestResources\**" />
-    <EmbeddedResource Remove="TestResources\**" />
-    <None Remove="TestResources\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="Regexes\backtracking.yaml" />
   </ItemGroup>
 

@@ -82,7 +82,7 @@ public class TestResourceTests
         RunTestCases(testCases);
     }
 
-    private static void RunTestCases<TTestCase>(List<TTestCase> testCases)
+    private static void RunTestCases<TTestCase>(IReadOnlyList<TTestCase> testCases)
         where TTestCase : YamlTestCase
     {
         var parser = Parser.GetDefault();
@@ -102,7 +102,7 @@ public class TestResourceTests
             }
             catch (Exception ex)
             {
-                sb.AppendLine($"test case {(i + 1)}: {ex.Message}");
+                sb.AppendLine($"test case {i + 1}: {ex.Message}");
             }
         }
 

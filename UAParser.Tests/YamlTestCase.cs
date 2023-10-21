@@ -16,9 +16,6 @@
 
 namespace UAParser.Tests;
 
-using YamlDotNet.Serialization;
-using YamlDotNet.Serialization.NamingConventions;
-
 public abstract class YamlTestCase
 {
     public string UserAgent { get; set; }

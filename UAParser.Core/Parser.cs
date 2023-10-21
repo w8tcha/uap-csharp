@@ -52,13 +52,13 @@ public sealed class Parser
         var config = new Config(options ?? new ParserOptions());
 
         this.userAgentParser = CreateParser(
-            regexList.user_agent_parsers.AsParallel().Select(config.UserAgentSelector),
+            regexList.user_agent_parsers.Select(config.UserAgentSelector),
             new Browser(Other, null, null, null));
         this.osParser = CreateParser(
-            regexList.os_parsers.AsParallel().Select(config.OSSelector),
+            regexList.os_parsers.Select(config.OSSelector),
             new OS(Other, null, null, null, null));
         this.deviceParser = CreateParser(
-            regexList.device_parsers.AsParallel().Select(config.DeviceSelector),
+            regexList.device_parsers.Select(config.DeviceSelector),
             new Device(Other, string.Empty, string.Empty));
     }
 

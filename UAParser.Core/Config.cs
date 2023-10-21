@@ -78,6 +78,11 @@ internal class Config
                       ?? throw new ArgumentNullException(
                           $"{key} is missing regular expression specification.");
 
+        if (pattern.Contains(@"\_"))
+        {
+            pattern = pattern.Replace(@"\_", "_");
+        }
+
         // Singleline: User agent strings do not contain newline characters. RegexOptions.Singleline improves performance.
         // CultureInvariant: The interpretation of a user agent never depends on the current locale.
         var options = RegexOptions.Singleline | RegexOptions.CultureInvariant;
