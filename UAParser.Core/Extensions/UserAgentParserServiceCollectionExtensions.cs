@@ -36,7 +36,7 @@ public static class UserAgentParserServiceCollectionExtensions
     /// <returns>The <see cref="IServiceCollection"/> so that additional calls can be chained.</returns>
     public static IServiceCollection AddUserAgentParser(this IServiceCollection services)
     {
-        if (services == null)
+        if (services is null)
         {
             throw new ArgumentNullException(nameof(services));
         }

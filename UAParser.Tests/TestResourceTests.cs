@@ -92,7 +92,7 @@ public class TestResourceTests
         for (var i = 0; i < testCases.Count; i++)
         {
             var tc = testCases[i];
-            if (tc == null)
+            if (tc is null)
                 continue;
 
             var clientInfo = parser.Parse(tc.UserAgent);

@@ -29,8 +29,8 @@ public sealed class Device
     public Device(string family, string brand, string model)
     {
         this.Family = family.Trim();
-        if (brand != null) this.Brand = brand.Trim();
-        if (model != null) this.Model = model.Trim();
+        if (brand is not null) this.Brand = brand.Trim();
+        if (model is not null) this.Model = model.Trim();
     }
 
     /// <summary>

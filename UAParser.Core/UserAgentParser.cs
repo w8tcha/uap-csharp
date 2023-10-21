@@ -68,7 +68,7 @@ public sealed class UserAgentParser : IUserAgentParser
         var uaParser = Parser.GetDefault(new ParserOptions { UseCompiledRegex = true } , this.cache);
 
         return this.httpContextAccessor.HttpContext?.Request.Headers.TryGetValue(UserAgent, out var uaHeader)
-               == true
+                   is true
                    ? uaParser.Parse(uaHeader[0], true)
                    : default;
     }
