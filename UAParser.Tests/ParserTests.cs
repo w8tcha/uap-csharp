@@ -19,6 +19,7 @@ namespace UAParser.Tests;
 using System;
 
 using UAParser.Objects;
+
 using YamlDotNet.Serialization.NamingConventions;
 using YamlDotNet.Serialization;
 
@@ -35,7 +36,8 @@ public class ParserTests
     public void can_get_parser_from_input()
     {
         var yamlContent = this.GetTestResources("UAParser.Tests.Regexes.regexes.yaml");
-        var parser = this.FromYaml(yamlContent);
+
+        var parser = FromYaml(yamlContent);
         Assert.NotNull(parser);
     }
 
@@ -43,7 +45,8 @@ public class ParserTests
     public void can_utilize_regex_timeouts()
     {
         var yamlContent = this.GetTestResources("UAParser.Tests.Regexes.backtracking.yaml");
-        var parser = this.FromYaml(
+
+        var parser = FromYaml(
             yamlContent,
             new ParserOptions { MatchTimeOut = TimeSpan.FromSeconds(1), });
 
@@ -70,7 +73,7 @@ public class ParserTests
     /// <param name="yaml">a string containing yaml definitions of reg-ex</param>
     /// <param name="parserOptions">specifies the options for the parser</param>
     /// <returns>A <see cref="Parser"/> instance parsing user agent strings based on the regexes defined in the json string</returns>
-    private Parser FromYaml(string yaml, ParserOptions parserOptions = null)
+    private static Parser FromYaml(string yaml, ParserOptions parserOptions = null)
     {
         var deserializer = new DeserializerBuilder()
             .WithNamingConvention(UnderscoredNamingConvention.Instance).Build();
