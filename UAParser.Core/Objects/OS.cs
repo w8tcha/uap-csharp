@@ -36,7 +36,7 @@ public sealed class OS
     }
 
     /// <summary>
-    /// The familiy of the OS
+    /// The family of the OS
     /// </summary>
     public string Family { get; }
 
@@ -67,6 +67,6 @@ public sealed class OS
     public override string ToString()
     {
         var version = VersionString.Format(this.Major, this.Minor, this.Patch, this.PatchMinor);
-        return this.Family + (!string.IsNullOrEmpty(version) ? $" {version}" : null);
+        return $"{this.Family}{(!string.IsNullOrEmpty(version) ? $" {version}" : null)}";
     }
 }

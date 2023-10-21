@@ -14,16 +14,17 @@
 // limitations under the License.
 //
 
-namespace UAParser.Extensions;
+namespace UAParser.Objects;
 
-using System;
-using System.Collections.Generic;
-
-internal static class DictionaryExtensions
+public class UserAgentSelector
 {
-    public static TValue Find<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key)
-    {
-        if (dictionary == null) throw new ArgumentNullException(nameof(dictionary));
-        return dictionary.TryGetValue(key, out var result) ? result : default;
-    }
+    public string regex { get; set; }
+
+    public string family_replacement { get; set; }
+
+    public string v1_replacement { get; set; }
+
+    public string v2_replacement { get; set; }
+
+    public string v3_replacement { get; set; }
 }

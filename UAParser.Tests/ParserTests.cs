@@ -19,6 +19,8 @@ namespace UAParser.Tests;
 using System;
 
 using UAParser.Objects;
+using YamlDotNet.Serialization.NamingConventions;
+using YamlDotNet.Serialization;
 
 public class ParserTests
 {
@@ -33,7 +35,7 @@ public class ParserTests
     public void can_get_parser_from_input()
     {
         var yamlContent = this.GetTestResources("UAParser.Tests.Regexes.regexes.yaml");
-        var parser = Parser.FromYaml(yamlContent);
+        var parser = this.FromYaml(yamlContent);
         Assert.NotNull(parser);
     }
 
@@ -41,16 +43,16 @@ public class ParserTests
     public void can_utilize_regex_timeouts()
     {
         var yamlContent = this.GetTestResources("UAParser.Tests.Regexes.backtracking.yaml");
-        var parser = Parser.FromYaml(
+        var parser = this.FromYaml(
             yamlContent,
             new ParserOptions { MatchTimeOut = TimeSpan.FromSeconds(1), });
 
         // this loads a backtracking-sensible regular expression and we'll attempt to match it with
         // a long string that should trigger the backtracking,
-        var input = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa>";
+        const string Input = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa>";
 
         var start = DateTime.UtcNow;
-        var match = parser.ParseUserAgent(input);
+        var match = parser.ParseUserAgent(Input);
         Assert.Equal(Parser.Other, match.Family);
         var duration = DateTime.UtcNow.Subtract(start);
 
@@ -60,5 +62,21 @@ public class ParserTests
         Assert.True(
             duration < TimeSpan.FromSeconds(3),
             $"The match takes longer than 3 seconds (took {duration}). The MatchTimeOut should have stopped it at 1 second, but this may just be a brittle test due to e.g. shared resources on a CI server");
+    }
+
+    /// <summary>
+    /// Returns a <see cref="Parser"/> instance based on the regex definitions in a json string
+    /// </summary>
+    /// <param name="yaml">a string containing yaml definitions of reg-ex</param>
+    /// <param name="parserOptions">specifies the options for the parser</param>
+    /// <returns>A <see cref="Parser"/> instance parsing user agent strings based on the regexes defined in the json string</returns>
+    private Parser FromYaml(string yaml, ParserOptions parserOptions = null)
+    {
+        var deserializer = new DeserializerBuilder()
+            .WithNamingConvention(UnderscoredNamingConvention.Instance).Build();
+
+        var regexList = deserializer.Deserialize<Selectors>(yaml);
+
+        return new Parser(regexList, parserOptions);
     }
 }

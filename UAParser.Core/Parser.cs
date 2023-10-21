@@ -21,7 +21,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+
+using Microsoft.Extensions.Caching.Memory;
 
 using UAParser.Extensions;
 using UAParser.Objects;
@@ -37,95 +41,189 @@ public sealed class Parser
     /// </summary>
     public const string Other = "Other";
 
-    private readonly Func<string, OS> _osParser;
+    private readonly Func<string, OS> osParser;
 
-    private readonly Func<string, Device> _deviceParser;
+    private readonly Func<string, Device> deviceParser;
 
-    private readonly Func<string, Browser> _userAgentParser;
+    private readonly Func<string, Browser> userAgentParser;
 
-    private Parser(MinimalYamlParser yamlParser, ParserOptions options)
+    private static IMemoryCache cache;
+
+    public Parser(Selectors regexList, ParserOptions options)
     {
         var config = new Config(options ?? new ParserOptions());
 
-        this._userAgentParser = CreateParser(
-            Read(yamlParser.ReadMapping("user_agent_parsers"), config.UserAgentSelector),
+        this.userAgentParser = CreateParser(
+            regexList.user_agent_parsers.Select(config.UserAgentSelector),
             new Browser(Other, null, null, null));
-        this._osParser = CreateParser(
-            Read(yamlParser.ReadMapping("os_parsers"), config.OSSelector),
+        this.osParser = CreateParser(
+            regexList.os_parsers.Select(config.OSSelector),
             new OS(Other, null, null, null, null));
-        this._deviceParser = CreateParser(
-            Read(yamlParser.ReadMapping("device_parsers"), config.DeviceSelector),
+        this.deviceParser = CreateParser(
+            regexList.device_parsers.Select(config.DeviceSelector),
             new Device(Other, string.Empty, string.Empty));
-    }
-
-    private static IEnumerable<T> Read<T>(
-        IEnumerable<Dictionary<string, string>> entries,
-        Func<Func<string, string>, T> selector)
-    {
-        return from cm in entries select selector(cm.Find);
-    }
-
-    /// <summary>
-    /// Returns a <see cref="Parser"/> instance based on the regex definitions in a yaml string
-    /// </summary>
-    /// <param name="yaml">a string containing yaml definitions of reg-ex</param>
-    /// <param name="parserOptions">specifies the options for the parser</param>
-    /// <returns>A <see cref="Parser"/> instance parsing user agent strings based on the regexes defined in the yaml string</returns>
-    public static Parser FromYaml(string yaml, ParserOptions parserOptions = null)
-    {
-        return new Parser(new MinimalYamlParser(yaml), parserOptions);
     }
 
     /// <summary>
     /// Returns a <see cref="Parser"/> instance based on the embedded regex definitions.
-    /// <remarks>The embedded regex definitions may be outdated. Consider passing in external yaml definitions using <see cref="Parser.FromYaml"/></remarks>
+    /// <remarks>The embedded regex definitions may be outdated. Consider passing in external json definitions using <see cref="Parser.FromJson"/></remarks>
     /// </summary>
     /// <param name="parserOptions">specifies the options for the parser</param>
+    /// <param name="memoryCache">the memory cache</param>
     /// <returns></returns>
-    public static Parser GetDefault(ParserOptions parserOptions = null)
+    public static Parser GetDefault(ParserOptions parserOptions = null, IMemoryCache memoryCache = null)
     {
         using var stream = typeof(Parser)
             .GetTypeInfo()
-            .Assembly.GetManifestResourceStream("UAParser.regexes.yaml");
+            .Assembly.GetManifestResourceStream("UAParser.regexes.json");
         using var reader = new StreamReader(stream);
-        return new Parser(new MinimalYamlParser(reader.ReadToEnd()), parserOptions);
+
+        var regexList = JsonSerializer.Deserialize<Selectors>(reader.ReadToEnd());
+
+        cache = memoryCache ?? new MemoryCache(new MemoryCacheOptions());
+
+        return new Parser(regexList, parserOptions);
+    }
+
+    /// <summary>
+    /// Returns a <see cref="Parser"/> instance based on the embedded regex definitions.
+    /// <remarks>The embedded regex definitions may be outdated. Consider passing in external json definitions using <see cref="Parser.FromJsonAsync"/></remarks>
+    /// </summary>
+    /// <param name="parserOptions">specifies the options for the parser</param>
+    /// <param name="memoryCache">the memory cache</param>
+    /// <returns></returns>
+    public static async Task<Parser> GetDefaultAsync(ParserOptions parserOptions = null, IMemoryCache memoryCache = null)
+    {
+        await using var stream = typeof(Parser)
+            .GetTypeInfo()
+            .Assembly.GetManifestResourceStream("UAParser.regexes.json");
+        using var reader = new StreamReader(stream);
+
+        var regexList = await JsonSerializer.DeserializeAsync<Selectors>(stream);
+
+        cache = memoryCache ?? new MemoryCache(new MemoryCacheOptions());
+
+        return new Parser(regexList, parserOptions);
+    }
+
+    /// <summary>
+    /// Load Parser with regex definitions from a JSON string
+    /// </summary>
+    /// <param name="jsonString">The json string.</param>
+    /// <param name="parserOptions">The parser options.</param>
+    /// <returns>Parser.</returns>
+    public static Parser FromJson(string jsonString, ParserOptions parserOptions = null)
+    {
+        var regexList = JsonSerializer.Deserialize<Selectors>(jsonString);
+
+        return new Parser(regexList, parserOptions);
+    }
+
+    /// <summary>
+    /// Load Parser with regex definitions from a JSON string
+    /// </summary>
+    /// <param name="jsonStream">The json stream.</param>
+    /// <param name="parserOptions">The parser options.</param>
+    /// <returns>Parser.</returns>
+    public static async Task<Parser> FromJsonAsync(Stream jsonStream, ParserOptions parserOptions = null)
+    {
+        var regexList = await JsonSerializer.DeserializeAsync<Selectors>(jsonStream);
+
+        return new Parser(regexList, parserOptions);
+    }
+
+    /// <summary>
+    ///  Parse a user agent string and obtain all client information
+    /// </summary>
+    /// <param name="userAgent">The user agent string.</param>
+    /// <param name="useCache">if set to <c>true</c> [use cache].</param>
+    /// <returns>ClientInfo.</returns>
+    public ClientInfo Parse(string userAgent, bool useCache = false)
+    {
+        if (useCache)
+        {
+            return cache.GetOrCreate(
+                userAgent,
+                _ =>
+                    {
+                        var os = this.ParseOS(userAgent);
+                        var device = this.ParseDevice(userAgent);
+                        var ua = this.ParseUserAgent(userAgent);
+
+                        return new ClientInfo(userAgent, os, device, ua);
+                    });
+        }
+
+        var os = this.ParseOS(userAgent);
+        var device = this.ParseDevice(userAgent);
+        var ua = this.ParseUserAgent(userAgent);
+
+        return new ClientInfo(userAgent, os, device, ua);
     }
 
     /// <summary>
     /// Parse a user agent string and obtain all client information
     /// </summary>
-    public ClientInfo Parse(string uaString)
+    /// <param name="userAgent">The user agent string.</param>
+    /// <param name="useCache">if set to <c>true</c> [use cache].</param>
+    /// <returns>ClientInfo.</returns>
+    public async Task<ClientInfo> ParseAsync(string userAgent, bool useCache = false)
     {
-        var os = this.ParseOS(uaString);
-        var device = this.ParseDevice(uaString);
-        var ua = this.ParseUserAgent(uaString);
-        return new ClientInfo(uaString, os, device, ua);
+        if (useCache)
+        {
+            return await cache.GetOrCreateAsync(
+                userAgent,
+                _ =>
+                    {
+                        var os = this.ParseOS(userAgent);
+                        var device = this.ParseDevice(userAgent);
+                        var ua = this.ParseUserAgent(userAgent);
+
+                        return Task.FromResult(new ClientInfo(userAgent, os, device, ua));
+                    });
+        }
+
+        var os = this.ParseOS(userAgent);
+        var device = this.ParseDevice(userAgent);
+        var ua = this.ParseUserAgent(userAgent);
+
+        return new ClientInfo(userAgent, os, device, ua);
     }
 
     /// <summary>
     /// Parse a user agent string and obtain the OS information
     /// </summary>
-    public OS ParseOS(string uaString)
+    /// <param name="userAgent">The user agent string.</param>
+    public OS ParseOS(string userAgent)
     {
-        return this._osParser(uaString);
+        return this.osParser(userAgent);
     }
 
     /// <summary>
     /// Parse a user agent string and obtain the device information
     /// </summary>
-    public Device ParseDevice(string uaString)
+    /// <param name="userAgent">The user agent string.</param>
+    public Device ParseDevice(string userAgent)
     {
-        return this._deviceParser(uaString);
+        return this.deviceParser(userAgent);
     }
 
     /// <summary>
     /// Parse a user agent string and obtain the UserAgent information
     /// </summary>
-    public Browser ParseUserAgent(string uaString)
+    /// <param name="userAgent">The user agent string.</param>
+    public Browser ParseUserAgent(string userAgent)
     {
-        return this._userAgentParser(uaString);
+        return this.userAgentParser(userAgent);
     }
 
+    /// <summary>
+    /// Creates the parser.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="parsers">The parsers.</param>
+    /// <param name="defaultValue">The default value.</param>
+    /// <returns>Func&lt;System.String, T&gt;.</returns>
     private static Func<string, T> CreateParser<T>(
         IEnumerable<Func<string, T>> parsers,
         T defaultValue)
@@ -140,69 +238,79 @@ public sealed class Parser
         Func<T, TResult> selector)
         where T : class
     {
-        parsers = parsers?.ToArray() ?? Enumerable.Empty<Func<string, T>>();
         return ua =>
             selector(parsers.Select(p => p(ua)).FirstOrDefault(m => m != null) ?? defaultValue);
     }
 
+    /// <summary>
+    /// Class Config.
+    /// </summary>
     private class Config
     {
+        /// <summary>
+        /// The options
+        /// </summary>
         private readonly ParserOptions _options;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Config"/> class.
+        /// </summary>
+        /// <param name="options">The options.</param>
         internal Config(ParserOptions options)
         {
             this._options = options;
         }
 
         // ReSharper disable once InconsistentNaming
-        public Func<string, OS> OSSelector(Func<string, string> indexer)
+        public Func<string, OS> OSSelector(OSSelector selector)
         {
-            var regex = this.Regex(indexer, "OS");
-            var os = indexer("os_replacement");
-            var v1 = indexer("os_v1_replacement");
-            var v2 = indexer("os_v2_replacement");
-            var v3 = indexer("os_v3_replacement");
-            var v4 = indexer("os_v4_replacement");
+            var regex = this.Regex(selector.regex, "OS");
+            var os = selector.os_replacement;
+            var v1 = selector.os_v1_replacement;
+            var v2 = selector.os_v2_replacement;
+            var v3 = selector.os_v3_replacement;
+            var v4 = selector.os_v4_replacement;
             return Parsers.OS(regex, os, v1, v2, v3, v4);
         }
 
-        public Func<string, Browser> UserAgentSelector(Func<string, string> indexer)
+        public Func<string, Browser> UserAgentSelector(UserAgentSelector selector)
         {
-            var regex = this.Regex(indexer, "User agent");
-            var family = indexer("family_replacement");
-            var v1 = indexer("v1_replacement");
-            var v2 = indexer("v2_replacement");
-            var v3 = indexer("v3_replacement");
+            var regex = this.Regex(selector.regex, "User agent");
+            var family = selector.family_replacement;
+            var v1 = selector.v1_replacement;
+            var v2 = selector.v2_replacement;
+            var v3 = selector.v3_replacement;
             return Parsers.UserAgent(regex, family, v1, v2, v3);
         }
 
-        public Func<string, Device> DeviceSelector(Func<string, string> indexer)
+        public Func<string, Device> DeviceSelector(DeviceSelector selector)
         {
-            var regex = this.Regex(indexer, "Device", indexer("regex_flag"));
-            var device = indexer("device_replacement");
-            var brand = indexer("brand_replacement");
-            var model = indexer("model_replacement");
+            var regex = this.Regex(selector.regex, "Device", selector.regex_flag);
+            var device = selector.device_replacement;
+            var brand = selector.brand_replacement;
+            var model = selector.model_replacement;
             return Parsers.Device(regex, device, brand, model);
         }
 
-        private Regex Regex(Func<string, string> indexer, string key, string regexFlag = null)
+        private Regex Regex(string regex, string key, string regexFlag = null)
         {
-            var pattern = indexer("regex")
+            var pattern = regex
                           ?? throw new Exception(
                               $"{key} is missing regular expression specification.");
 
             // Some expressions in the regex.yaml file causes parsing errors
             // in .NET such as the \_ token so need to alter them before
             // proceeding.
-
             if (pattern.Contains(@"\_"))
+            {
                 pattern = pattern.Replace(@"\_", "_");
+            }
 
             // Singleline: User agent strings do not contain newline characters. RegexOptions.Singleline improves performance.
             // CultureInvariant: The interpretation of a user agent never depends on the current locale.
             var options = RegexOptions.Singleline | RegexOptions.CultureInvariant;
 
-            if ("i".Equals(regexFlag))
+            if (regexFlag is not null)
             {
                 options |= RegexOptions.IgnoreCase;
             }
@@ -230,34 +338,34 @@ public sealed class Parser
             // For variable replacements to be consistent the order of the linq statements are important ($1
             // is only available to the first 'from X in Replace(..)' and so forth) so a a bit of conditional
             // is required to get the creations to work. This is backed by unit tests
-            if (v1Replacement == "$1")
+            if (v1Replacement != "$1")
             {
-                if (v2Replacement == "$2")
-                {
-                    return Create(
-                        regex,
-                        from v1 in Replace(v1Replacement, "$1")
-                        from v2 in Replace(v2Replacement, "$2")
-                        from v3 in Replace(v3Replacement, "$3")
-                        from v4 in Replace(v4Replacement, "$4")
-                        from family in Replace(osReplacement, "$5")
-                        select new OS(family, v1, v2, v3, v4));
-                }
-
                 return Create(
                     regex,
-                    from v1 in Replace(v1Replacement, "$1")
-                    from family in Replace(osReplacement, "$2")
+                    from family in Replace(osReplacement, "$1")
+                    from v1 in Replace(v1Replacement, "$2")
                     from v2 in Replace(v2Replacement, "$3")
                     from v3 in Replace(v3Replacement, "$4")
                     from v4 in Replace(v4Replacement, "$5")
                     select new OS(family, v1, v2, v3, v4));
             }
 
+            if (v2Replacement == "$2")
+            {
+                return Create(
+                    regex,
+                    from v1 in Replace(v1Replacement, "$1")
+                    from v2 in Replace(v2Replacement, "$2")
+                    from v3 in Replace(v3Replacement, "$3")
+                    from v4 in Replace(v4Replacement, "$4")
+                    from family in Replace(osReplacement, "$5")
+                    select new OS(family, v1, v2, v3, v4));
+            }
+
             return Create(
                 regex,
-                from family in Replace(osReplacement, "$1")
-                from v1 in Replace(v1Replacement, "$2")
+                from v1 in Replace(v1Replacement, "$1")
+                from family in Replace(osReplacement, "$2")
                 from v2 in Replace(v2Replacement, "$3")
                 from v3 in Replace(v3Replacement, "$4")
                 from v4 in Replace(v4Replacement, "$5")
@@ -296,7 +404,7 @@ public sealed class Parser
 
         private static Func<Match, IEnumerator<int>, string> Replace(string replacement)
         {
-            return replacement != null ? Select(_ => replacement) : Select();
+            return replacement != null ? Select(_ => replacement) : Select(v => v);
         }
 
         private static Func<Match, IEnumerator<int>, string> Replace(
@@ -306,12 +414,12 @@ public sealed class Parser
             return replacement != null && replacement.Contains(token)
                        ? Select(
                            s => s != null
-                                    ? replacement.ReplaceFirstOccurence(token, s)
-                                    : replacement)
+                                      ? replacement.ReplaceFirstOccurrence(token, s)
+                                      : replacement)
                        : Replace(replacement);
         }
 
-        private static readonly string[] _allReplacementTokens = {
+        private static readonly string[] AllReplacementTokens = {
                                                                          "$1", "$2", "$3", "$4",
                                                                          "$5", "$6", "$7", "$8",
                                                                          "$9",
@@ -320,7 +428,41 @@ public sealed class Parser
         private static Func<Match, IEnumerator<int>, string> ReplaceAll(string replacement)
         {
             if (replacement == null)
-                return Select();
+            {
+                return Select(v => v);
+            }
+
+            return (m, _) =>
+                {
+                    var finalString = replacement;
+
+                    if (!finalString.Contains('$'))
+                    {
+                        return finalString;
+                    }
+
+                    var groups = m.Groups;
+                    for (var i = 0; i < AllReplacementTokens.Length; i++)
+                    {
+                        var tokenNumber = i + 1;
+                        var token = AllReplacementTokens[i];
+                        if (finalString.Contains(token))
+                        {
+                            var replacementText = string.Empty;
+                            Group group;
+                            if (tokenNumber <= groups.Count
+                                && (group = groups[tokenNumber]).Success)
+                                replacementText = group.Value;
+
+                            finalString = ReplaceFunction(finalString, replacementText, token);
+                        }
+
+                        if (!finalString.Contains('$'))
+                            break;
+                    }
+
+                    return finalString;
+                };
 
             static string ReplaceFunction(
                 string replacementString,
@@ -328,50 +470,20 @@ public sealed class Parser
                 string token)
             {
                 return matchedGroup != null
-                           ? replacementString.ReplaceFirstOccurence(token, matchedGroup)
+                           ? replacementString.ReplaceFirstOccurrence(token, matchedGroup)
                            : replacementString;
             }
-
-            return (m, num) =>
-                {
-                    var finalString = replacement;
-                    if (finalString.Contains('$'))
-                    {
-                        var groups = m.Groups;
-                        for (var i = 0; i < _allReplacementTokens.Length; i++)
-                        {
-                            var tokenNumber = i + 1;
-                            var token = _allReplacementTokens[i];
-                            if (finalString.Contains(token))
-                            {
-                                var replacementText = string.Empty;
-                                Group group;
-                                if (tokenNumber <= groups.Count
-                                    && (group = groups[tokenNumber]).Success)
-                                    replacementText = group.Value;
-
-                                finalString = ReplaceFunction(finalString, replacementText, token);
-                            }
-
-                            if (!finalString.Contains('$'))
-                                break;
-                        }
-                    }
-
-                    return finalString;
-                };
-        }
-
-        private static Func<Match, IEnumerator<int>, string> Select()
-        {
-            return Select(v => v);
         }
 
         private static Func<Match, IEnumerator<int>, T> Select<T>(Func<string, T> selector)
         {
             return (m, num) =>
                 {
-                    if (!num.MoveNext()) throw new InvalidOperationException();
+                    if (!num.MoveNext())
+                    {
+                        throw new InvalidOperationException();
+                    }
+
                     var groups = m.Groups;
                     Group group;
                     return selector(
@@ -404,8 +516,11 @@ public sealed class Parser
         private static IEnumerator<T> Generate<T>(T initial, Func<T, T> next)
         {
             for (var state = initial;; state = next(state))
+            {
                 yield return state;
-            // ReSharper disable once FunctionNeverReturns
+            }
+
+            // ReSharper disable once IteratorNeverReturns
         }
     }
 }

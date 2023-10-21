@@ -23,6 +23,8 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddUserAgentParser();
 
+builder.Services.AddMemoryCache();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

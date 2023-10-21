@@ -15,6 +15,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="TestResources\**" />
+    <EmbeddedResource Remove="TestResources\**" />
+    <None Remove="TestResources\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Regexes\backtracking.yaml" />
   </ItemGroup>
 
@@ -32,20 +38,16 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
-    <PackageReference Include="xunit" Version="2.5.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.1">
+    <PackageReference Include="xunit" Version="2.5.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="YamlDotNet" Version="13.4.0" />
+    <PackageReference Include="YamlDotNet" Version="13.7.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\UAParser.Core\UAParser.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="TestResources\" />
   </ItemGroup>
 
 </Project>

@@ -20,9 +20,21 @@ using System;
 
 internal static class StringExtensions
 {
-    public static string ReplaceFirstOccurence(this string input, string search, string replacement)
+    /// <summary>
+    /// Replaces the first occurrence.
+    /// </summary>
+    /// <param name="input">The input.</param>
+    /// <param name="search">The search.</param>
+    /// <param name="replacement">The replacement.</param>
+    /// <returns>System.String.</returns>
+    /// <exception cref="System.ArgumentNullException">input</exception>
+    public static string ReplaceFirstOccurrence(this string input, string search, string replacement)
     {
-        if (input == null) throw new ArgumentNullException(nameof(input));
+        if (input == null)
+        {
+            throw new ArgumentNullException(nameof(input));
+        }
+
         var index = input.IndexOf(search, StringComparison.Ordinal);
         return index >= 0
                    ? $"{input[..index]}{replacement}{input[(index + search.Length)..]}"

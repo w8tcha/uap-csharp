@@ -19,6 +19,7 @@ namespace UAParser;
 using System;
 
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Memory;
 
 using UAParser.Interfaces;
 using UAParser.Objects;
@@ -32,16 +33,19 @@ public sealed class UserAgentParser : IUserAgentParser
 
     private readonly IHttpContextAccessor httpContextAccessor;
 
+    private readonly IMemoryCache cache;
+
     private const string UserAgent = "User-Agent";
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UserAgentParser"/> class.
     /// </summary>
     /// <param name="httpContextAccessor">The HTTP context accessor.</param>
-    public UserAgentParser(IHttpContextAccessor httpContextAccessor)
+    public UserAgentParser(IHttpContextAccessor httpContextAccessor, IMemoryCache memoryCache)
     {
         this.httpContextAccessor = httpContextAccessor;
         this.clientInfo = this.GetBrowserLazy();
+        this.cache = memoryCache;
     }
 
     /// <summary>
@@ -61,11 +65,11 @@ public sealed class UserAgentParser : IUserAgentParser
     private ClientInfo GetBrowser()
     {
         // get a parser with the embedded regex patterns
-        var uaParser = Parser.GetDefault();
+        var uaParser = Parser.GetDefault(new ParserOptions { UseCompiledRegex = true } , this.cache);
 
         return this.httpContextAccessor.HttpContext?.Request.Headers.TryGetValue(UserAgent, out var uaHeader)
                == true
-                   ? uaParser.Parse(uaHeader[0])
+                   ? uaParser.Parse(uaHeader[0], true)
                    : default;
     }
 }

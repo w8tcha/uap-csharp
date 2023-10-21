@@ -29,7 +29,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="..\node_modules\uap-core\regexes.yaml" Link="regexes.yaml" />
+    <None Remove="regexes.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="regexes.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
@@ -41,6 +47,10 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
 </Project>
