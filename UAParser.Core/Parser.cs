@@ -92,7 +92,7 @@ public sealed class Parser
     /// <returns></returns>
     public static async Task<Parser> GetDefaultAsync(ParserOptions parserOptions = null, IMemoryCache memoryCache = null)
     {
-        await using var stream = typeof(Parser)
+       await using var stream = typeof(Parser)
             .GetTypeInfo()
             .Assembly.GetManifestResourceStream("UAParser.regexes.json");
         using var reader = new StreamReader(stream);
