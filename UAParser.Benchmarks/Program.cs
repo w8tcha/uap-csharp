@@ -1,15 +1,4 @@
 //
-//
-//
-// //
-// //
-// //
-// //
-// //
-// //
-// //
-// //
-//
 // Copyright Atif Aziz, Søren Enemærke
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -37,6 +26,5 @@ var config = ManualConfig.Create(DefaultConfig.Instance)
     .WithOptions(ConfigOptions.DisableOptimizationsValidator);
 
 BenchmarkSwitcher.FromAssembly(Assembly.GetExecutingAssembly()).Run(args, config);
-
 
 // Run dotnet run -c Release -- --job short --filter *LibraryComparisonBenchmarks*
