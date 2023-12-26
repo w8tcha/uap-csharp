@@ -41,6 +41,7 @@ public sealed class UserAgentParser : IUserAgentParser
     /// Initializes a new instance of the <see cref="UserAgentParser"/> class.
     /// </summary>
     /// <param name="httpContextAccessor">The HTTP context accessor.</param>
+    /// <param name="memoryCache">The memory cache.</param>
     public UserAgentParser(IHttpContextAccessor httpContextAccessor, IMemoryCache memoryCache)
     {
         this.httpContextAccessor = httpContextAccessor;
