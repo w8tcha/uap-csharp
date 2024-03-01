@@ -18,7 +18,6 @@ namespace UAParser;
 
 using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 
 using UAParser.Extensions;
 using UAParser.Objects;

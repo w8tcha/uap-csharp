@@ -17,7 +17,6 @@
 namespace UAParser.Objects;
 
 using System;
-using System.Text.RegularExpressions;
 
 /// <summary>
 /// Options available for the parser

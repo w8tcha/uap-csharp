@@ -17,7 +17,6 @@
 namespace UAParser;
 
 using System;
-using System.Text.RegularExpressions;
 
 using UAParser.Objects;
 
