@@ -1,6 +1,6 @@
 {
-  "name": "uaparser.Core",
-  "version": "4.0.0",
+  "name": "uaparser-core",
+  "version": "4.0.3",
   "private": true,
   "devDependencies": {
     "@w8tcha/grunt-dev-update": "^2.3.1",

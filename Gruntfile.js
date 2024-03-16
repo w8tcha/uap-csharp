@@ -9,13 +9,13 @@ module.exports = function(grunt) {
 
     // CONFIGURATION
     grunt.initConfig({
-        pkg: grunt.file.readJSON("package.json"),
+        pkg: grunt.file.readJSON('package.json'),
         
         devUpdate: {
             main: {
                 options: {
                     reportUpdated: true,
-                    updateType: "force",
+                    updateType: 'force',
                     semver: false,
                     packages: {
                         devDependencies: true, //only check for devDependencies
@@ -27,10 +27,10 @@ module.exports = function(grunt) {
     });
 
     // PLUGINS
-    grunt.loadNpmTasks("@w8tcha/grunt-dev-update");
+    grunt.loadNpmTasks('@w8tcha/grunt-dev-update');
 
-    grunt.registerTask("default",
+    grunt.registerTask('default',
         [
-            "devUpdate"
+            'devUpdate'
         ]);
 };
