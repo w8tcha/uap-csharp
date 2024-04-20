@@ -13,19 +13,20 @@ The implementation uses the shared regex patterns and overrides from regexes.yam
 ------
 You can then build and run the tests by
 
+```` cmd
+> dotnet restore UAParser.Core.sln
 ````
-dotnet restore UAParser.Core.sln
 
-dotnet test UAParser.Core.sln
+```` cmd
+> dotnet test UAParser.Core.sln
 ````
 
 Update the embedded regexes
 ------
 To pull the latest regexes into the project:
 
-````
-    npm install
-	grunt
+```` cmd
+> npm install && grunt
 ````
 
 ## How to use ?
@@ -34,8 +35,8 @@ To pull the latest regexes into the project:
 Install the [UAParser.Core nuget package](https://www.nuget.org/packages/UAParser.Core/)
 
 
-````
-Install-Package UAParser.Core
+```` cmd
+> Install-Package UAParser.Core
 ````
 
 **Step 2:** Enable the browser detection service inside the `ConfigureServices` method of `Startup.cs`.

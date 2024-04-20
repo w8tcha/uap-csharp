@@ -10,6 +10,16 @@ module.exports = function(grunt) {
     // CONFIGURATION
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
+
+        downloadfile: {
+            options: {
+                dest: './UAParser.Core',
+                overwriteEverytime: true
+            },
+            files: {
+                'regexes.yaml': 'https://raw.githubusercontent.com/ua-parser/uap-core/master/regexes.yaml'
+            }
+        },
         
         devUpdate: {
             main: {
@@ -28,9 +38,10 @@ module.exports = function(grunt) {
 
     // PLUGINS
     grunt.loadNpmTasks('@w8tcha/grunt-dev-update');
+    grunt.loadNpmTasks('grunt-downloadfile');
 
     grunt.registerTask('default',
         [
-            'devUpdate'
+            'downloadfile'
         ]);
 };
