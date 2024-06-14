@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="..\node_modules\uap-core\regexes.yaml" Link="Regexes\regexes.yaml" />
+    <EmbeddedResource Include="..\UAParser.Core\regexes.yaml" Link="Regexes\regexes.yaml" />
     <EmbeddedResource Include="tests\test_device.yaml" Link="TestResources\test_device.yaml" />
     <EmbeddedResource Include="tests\test_os.yaml" Link="TestResources\test_os.yaml" />
     <EmbeddedResource Include="tests\test_ua.yaml" Link="TestResources\test_ua.yaml" />
