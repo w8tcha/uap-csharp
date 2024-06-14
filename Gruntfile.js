@@ -33,12 +33,23 @@ module.exports = function(grunt) {
                     }
                 }
             }
+        },
+        shell: {
+            convertYAML: {
+                command: [
+                    '@echo off',
+                    'cd YamlConverter\\bin\\Debug\\net8.0\\',
+                    'echo convert YAML to JSON',
+                    'YamlConverter'
+                ].join('&&')
+            }
         }
     });
 
     // PLUGINS
     grunt.loadNpmTasks('@w8tcha/grunt-dev-update');
     grunt.loadNpmTasks('grunt-downloadfile');
+    grunt.loadNpmTasks('grunt-shell');
 
     grunt.registerTask('default',
         [

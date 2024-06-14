@@ -28,6 +28,10 @@
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <EnablePackageValidation>true</EnablePackageValidation>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Remove="regexes.json" />
   </ItemGroup>
