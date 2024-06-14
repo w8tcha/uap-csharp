@@ -26,9 +26,6 @@
 *.unsuccessfulbuild
 ipch/
 obj/
-[Bb]in
-[Dd]ebug*/
-[Rr]elease*/
 Ankh.NoLoad
 
 #MonoDevelop
@@ -67,3 +64,7 @@ packages/
 node_modules/
 package-lock.json
 UAParser.Core.sln.GhostDoc.xml
+/UAParser.Benchmarks/bin
+/UAParser.Core/bin
+/UAParser.DemoApp/bin
+/UAParser.Tests/bin
