@@ -10,15 +10,22 @@ module.exports = function(grunt) {
     // CONFIGURATION
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-
-        downloadfile: {
-            options: {
-                dest: './UAParser.Core',
-                overwriteEverytime: true
-            },
-            files: {
-                'regexes.yaml': 'https://raw.githubusercontent.com/ua-parser/uap-core/master/regexes.yaml'
+        curl: {
+            'regexes': {
+                src: 'https://raw.githubusercontent.com/ua-parser/uap-core/master/regexes.yaml',
+                dest: './UAParser.Core/regexes.yaml'
             }
+        },
+
+        'curl-dir': {
+            'UAParser.Tests/tests': [
+                'https://raw.githubusercontent.com/ua-parser/uap-core/master/tests/regexes.js',
+                'https://raw.githubusercontent.com/ua-parser/uap-core/master/tests/sample.js',
+                'https://raw.githubusercontent.com/ua-parser/uap-core/master/tests/test.js',
+                'https://raw.githubusercontent.com/ua-parser/uap-core/master/tests/test_device.yaml',
+                'https://raw.githubusercontent.com/ua-parser/uap-core/master/tests/test_os.yaml',
+                'https://raw.githubusercontent.com/ua-parser/uap-core/master/tests/test_ua.yaml'
+            ]
         },
         
         devUpdate: {
@@ -48,11 +55,11 @@ module.exports = function(grunt) {
 
     // PLUGINS
     grunt.loadNpmTasks('@w8tcha/grunt-dev-update');
-    grunt.loadNpmTasks('grunt-downloadfile');
+    grunt.loadNpmTasks('grunt-curl');
     grunt.loadNpmTasks('grunt-shell');
 
     grunt.registerTask('default',
         [
-            'downloadfile'
+            'curl', 'curl-dir', 'shell'
         ]);
 };
