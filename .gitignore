@@ -68,3 +68,4 @@ UAParser.Core.sln.GhostDoc.xml
 /UAParser.Core/bin
 /UAParser.DemoApp/bin
 /UAParser.Tests/bin
+publish.bat
