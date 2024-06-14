@@ -25,6 +25,13 @@ defaults:
     shell: pwsh
 
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+    - run: dotnet build ./UAParser.Core/UAParser.Core.csproj  --configuration Release --output ${{ env.NuGetDirectory }}
   create_nuget:
     runs-on: ubuntu-latest
     steps:
