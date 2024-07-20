@@ -30,6 +30,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		Gruntfile.js = Gruntfile.js
 		package.json = package.json
+		secret.json = secret.json
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Converter", "Converter", "{36AB99BE-2697-40E3-8A1C-FF91F1BCF850}"

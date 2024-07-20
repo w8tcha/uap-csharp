@@ -5,10 +5,9 @@
  * Try: http://24ways.org/2013/grunt-is-not-weird-and-hard/
  */
 module.exports = function(grunt) {
-
-
     // CONFIGURATION
     grunt.initConfig({
+        secret: grunt.file.readJSON('secret.json'),
         pkg: grunt.file.readJSON('package.json'),
         curl: {
             'regexes': {
@@ -27,7 +26,7 @@ module.exports = function(grunt) {
                 'https://raw.githubusercontent.com/ua-parser/uap-core/master/tests/test_ua.yaml'
             ]
         },
-        
+
         devUpdate: {
             main: {
                 options: {
@@ -49,6 +48,14 @@ module.exports = function(grunt) {
                     'echo convert YAML to JSON',
                     'YamlConverter'
                 ].join('&&')
+            },
+            publishNuGet: {
+                command: [
+                    '@echo off',
+                    'cd UAParser.Core\\bin\\Release\\',
+                    'echo publish Package to NuGet',
+                    'dotnet nuget push "UAParser.Core.<%= pkg.version %>.nupkg" --source "https://api.nuget.org/v3/index.json" --api-key "<%= secret.api %>"'
+                ].join('&&')
             }
         }
     });
@@ -60,6 +67,11 @@ module.exports = function(grunt) {
 
     grunt.registerTask('default',
         [
-            'curl', 'curl-dir', 'shell'
+            'curl', 'curl-dir', 'shell:convertYAML'
+        ]);
+
+    grunt.registerTask('publish',
+        [
+            'shell:publishNuGet'
         ]);
 };
