@@ -69,4 +69,3 @@ UAParser.Core.sln.GhostDoc.xml
 /UAParser.DemoApp/bin
 /UAParser.Tests/bin
 publish.bat
-secret.json
