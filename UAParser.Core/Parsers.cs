@@ -34,7 +34,7 @@ internal static class Parsers
         string v4Replacement)
     {
         // For variable replacements to be consistent the order of the linq statements are important ($1
-        // is only available to the first 'from X in Replace(..)' and so forth) so a a bit of conditional
+        // is only available to the first 'from X in Replace(..)' and so forth) so a bit of conditional
         // is required to get the creations to work. This is backed by unit tests
         if (v1Replacement is not "$1")
         {
@@ -120,7 +120,7 @@ internal static class Parsers
     private static readonly string[] AllReplacementTokens = {
                                                                     "$1", "$2", "$3", "$4",
                                                                     "$5", "$6", "$7", "$8",
-                                                                    "$9",
+                                                                    "$9"
                                                                 };
 
     private static Func<Match, IEnumerator<int>, string> ReplaceAll(string replacement)

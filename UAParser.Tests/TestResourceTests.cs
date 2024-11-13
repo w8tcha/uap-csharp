@@ -82,7 +82,7 @@ public class TestResourceTests
         RunTestCases(testCases);
     }
 
-    private static void RunTestCases<TTestCase>(IReadOnlyList<TTestCase> testCases)
+    private static void RunTestCases<TTestCase>(List<TTestCase> testCases)
         where TTestCase : YamlTestCase
     {
         var parser = Parser.GetDefault();
