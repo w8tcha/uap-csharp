@@ -95,6 +95,7 @@ public sealed class Parser
        await using var stream = typeof(Parser)
             .GetTypeInfo()
             .Assembly.GetManifestResourceStream("UAParser.regexes.json");
+
         using var reader = new StreamReader(stream);
 
         var regexList = await JsonSerializer.DeserializeAsync<Selectors>(stream);
