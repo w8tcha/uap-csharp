@@ -87,7 +87,13 @@ test_cases:
     family: 'Oculus Browser'
     major: '26'
     minor: '2'
-    patch: '10'
+    patch: '0'
+
+  - user_agent_string: 'Mozilla/5.0 (X11; Linux x86_64; Quest 3) AppleWebKit/537.36 (KHTML, like Gecko) OculusBrowser/36.6.0.9.50.692136875 Chrome/130.0.6723.191 VR Safari/537.36'
+    family: 'Oculus Browser'
+    major: '36'
+    minor: '6'
+    patch: '0'
 
   - user_agent_string: 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_3; en-us; Silk/1.1.0-80) AppleWebKit/533.16 (KHTML, like Gecko) Version/5.0 Safari/533.16 Silk-Accelerated=true'
     family: 'Amazon Silk'
@@ -7850,7 +7856,25 @@ test_cases:
     major: 
     minor: 
     patch: 
-        
+
+  - user_agent_string: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Safari/604.1 KAKAOTALK/11.3.1 (INAPP)'
+    family: 'KakaoTalk'
+    major: '11'
+    minor: '3'
+    patch: '1'
+
+  - user_agent_string: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Safari/604.1 KAKAOTALK/11.3.1 (PFINAPP)'
+    family: 'KakaoTalk'
+    major: '11'
+    minor: '3'
+    patch: '1'
+
+  - user_agent_string: 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/131.0.0.0 Mobile Safari/537.36 KAKAOTALK/10.2.3 (INAPP)'
+    family: 'KakaoTalk'
+    major: '10'
+    minor: '2'
+    patch: '3'
+
   - user_agent_string: 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_2_6 like Mac OS X) AppleWebKit/604.5.6 (KHTML, like Gecko) Mobile/15D100 Flipboard/4.2.2'
     family: 'Flipboard'
     major: '4'
@@ -8943,3 +8967,135 @@ test_cases:
     major: '1'
     minor: '0'
     patch:
+
+  - user_agent_string: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 115Browser/35.2.0.3'
+    family: '115 Browser'
+    major: '35'
+    minor: '2'
+    patch: '0'
+
+  - user_agent_string: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Avira/131.0.0.0'
+    family: 'Avira'
+    major: '131'
+    minor: '0'
+    patch: '0'
+
+  - user_agent_string: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 CCleaner/131.0.0.0'
+    family: 'CCleaner'
+    major: '131'
+    minor: '0'
+    patch: '0'
+
+  - user_agent_string: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Norton/131.0.0.0'
+    family: 'Norton'
+    major: '131'
+    minor: '0'
+    patch: '0'
+
+  - user_agent_string: 'Mozilla/5.0 (Windows; U; Windows NT 5.2;. en-US) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.6312.80 Safari/537.36 Quark/7.8.0.750'
+    family: 'Quark'
+    major: '7'
+    minor: '8'
+    patch: '0'
+
+  - user_agent_string: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36 QuarkPC/2.0.7.222'
+    family: 'Quark PC'
+    major: '2'
+    minor: '0'
+    patch: '7'
+
+  - user_agent_string: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 SLBrowser/9.0.5.12181 SLBChan/105 SLBVPV/64-bit'
+    family: 'Smart Lenovo Browser'
+    major: '9'
+    minor: '0'
+    patch: '5'
+
+  - user_agent_string: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Atom/26.0.0.0 Safari/537.36'
+    family: 'Atom Browser'
+    major: '26'
+    minor: '0'
+    patch: '0'
+
+  - user_agent_string: 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.85 Safari/537.36 QIHU 360SEi18n'
+    family: '360 Secure Browser'
+    major:
+    minor:
+    patch:
+
+  - user_agent_string: 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36 QIHU 360ENT'
+    family: '360 Secure Browser'
+    major:
+    minor:
+    patch:
+
+  - user_agent_string: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Decentr Safari/537.36'
+    family: 'Decentr Web3 Browser'
+    major:
+    minor:
+    patch:
+
+  - user_agent_string: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.31339 Safari/537.36 Sparrow'
+    family: 'Sparrow Browser'
+    major:
+    minor:
+    patch:
+
+  - user_agent_string: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; Chromium GOST) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36'
+    family: 'Chromium GOST Browser'
+    major:
+    minor:
+    patch:
+
+  - user_agent_string: 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.6312.123 Safari/537.36 AOLShield/123.0.6312.6-818'
+    family: 'AOL Shield Browser'
+    major: '123'
+    minor: '0'
+    patch: '6312'
+
+  - user_agent_string: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 Hola/1.233.355'
+    family: 'Hola Browser'
+    major: '1'
+    minor: '233'
+    patch: '355'
+
+  - user_agent_string: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 CravingExplorer/2.10.7'
+    family: 'Craving Explorer Browser'
+    major: '2'
+    minor: '10'
+    patch: '7'
+
+  - user_agent_string: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Talon'
+    family: 'Talon Cyber Security Browser'
+    major:
+    minor:
+    patch:
+  
+  - user_agent_string: 'Mozilla/5.0 (X11; Linux aarch64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.200 Safari/537.36 Qaxbrowser'
+    family: 'QAX Browser'
+    major:
+    minor:
+    patch:
+
+  - user_agent_string: 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36 ABB/3.7.1'
+    family: 'Aloha Browser'
+    major: '3'
+    minor: '7'
+    patch: '1'
+
+  - user_agent_string: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.6778.109 ADG/11.1.4777 Safari/537.36'
+    family: 'AOL Desktop Gold Browser'
+    major: '11'
+    minor: '1'
+    patch: '4777'
+
+  - user_agent_string: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36 SberBrowser/21.0.0.0'
+    family: 'Sber Browser'
+    major: '21'
+    minor: '0'
+    patch: '0'
+
+  - user_agent_string: 'Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.1.2 Safari/537.36 JiSu/118.0.1.2'
+    family: 'JiSu Browser'
+    major: '118'
+    minor: '0'
+    patch: '1'

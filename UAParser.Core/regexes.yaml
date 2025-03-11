@@ -225,6 +225,9 @@ user_agent_parsers:
     family_replacement: 'TikTok'
   - regex: '(BytedanceWebview)\/[a-z0-9]+'
     family_replacement: 'TikTok'
+  # KakaoTalk
+  - regex: 'Mozilla.{1,200}Mobile.{1,100}(KAKAOTALK)/(\d+)\.(\d+)\.(\d+)'
+    family_replacement: 'KakaoTalk'
 
   # Phantom app
   - regex: 'Mozilla.{1,200}Mobile.{1,100}(Phantom\/ios|Phantom\/android).(\d+)\.(\d+)\.(\d+)'
@@ -404,7 +407,7 @@ user_agent_parsers:
   - regex: '(Instabridge)/(\d+)(?:\.(\d+)|)(?:\.(\d+)|)'
 
   # Aloha Browser
-  - regex: '(AlohaBrowser)/(\d+)\.(\d+)\.(\d+)(?:\.(\d+)|)'
+  - regex: '(AlohaBrowser|ABB)/(\d+)\.(\d+)\.(\d+)(?:\.(\d+)|)'
     family_replacement: 'Aloha Browser'
 
   # Brave Browser https://brave.com/ , should go before Safari and Chrome Mobile
@@ -425,7 +428,7 @@ user_agent_parsers:
     family_replacement: 'Edge Mobile'
 
   # Oculus Browser, should go before Samsung Internet
-  - regex: '(OculusBrowser)/(\d+)\.(\d+).0.0(?:\.([0-9\-]+)|)'
+  - regex: '(OculusBrowser)/(\d+)\.(\d+)(?:\.([0-9\-]+)|)'
     family_replacement: 'Oculus Browser'
 
   # Samsung Internet (based on Chrome, but lacking some features)
@@ -584,6 +587,85 @@ user_agent_parsers:
   # Surveyon https://www.surveyon.com/
   - regex: '^(surveyon)/(\d+)\.(\d+)\.(\d+)'
     family_replacement: 'Surveyon'
+
+  # 115 Browser
+  - regex: '(115Browser)/(\d+)\.(\d+)\.(\d+)\.(\d+)'
+    family_replacement: '115 Browser'
+
+ # Avira
+  - regex: '(Avira)/(\d+)\.(\d+)\.(\d+)\.(\d+)'
+    family_replacement: 'Avira'
+
+  # CCleaner Browser
+  - regex: '(CCleaner)/(\d+)\.(\d+)\.(\d+)\.(\d+)'
+    family_replacement: 'CCleaner'
+
+  # Norton
+  - regex: '(Norton)/(\d+)\.(\d+)\.(\d+)\.(\d+)'
+    family_replacement: 'Norton'
+
+  # Quark
+  - regex: '(Quark)/(\d+)\.(\d+)\.(\d+)'
+    family_replacement: 'Quark'
+  # Quark PC
+  - regex: '(QuarkPC)/(\d+)\.(\d+)\.(\d+)'
+    family_replacement: 'Quark PC'
+
+  # Smart Lenovo Browser
+  - regex: '(SLBrowser)/(\d+)\.(\d+)\.(\d+)\.(\d+) SLBChan/(\d+)'
+    family_replacement: 'Smart Lenovo Browser'
+  
+  # Atom Browser
+  - regex: '(Atom)/(\d+)\.(\d+)\.(\d+)\.(\d+)'
+    family_replacement: 'Atom Browser'
+
+  # 360 Secure Browser
+  - regex: '(Chrome)/\d+\.\d+\.\d+\.\d+ .* QIHU 360(?:SEi18n|ENT)'
+    family_replacement: '360 Secure Browser'
+
+  # Decentr Web3 Browser
+  - regex: '(Decentr)'
+    family_replacement: 'Decentr Web3 Browser'
+
+  # Sparrow Browser
+  - regex: '(Sparrow)'
+    family_replacement: 'Sparrow Browser'
+
+  # Chromium GOST Browser
+  - regex: '(Chromium GOST)'
+    family_replacement: 'Chromium GOST Browser'
+
+  # AOL Shield Browser
+  - regex: '(AOLShield)/(\d+)\.(\d+)\.(\d+)\.(\d+)'
+    family_replacement: 'AOL Shield Browser'
+
+  # Hola Browser
+  - regex: '(Hola)/(\d+)\.(\d+)\.(\d+)'
+    family_replacement: 'Hola Browser'
+
+  # Craving Explorer Browser
+  - regex: '(CravingExplorer)/(\d+)\.(\d+)\.(\d+)'
+    family_replacement: 'Craving Explorer Browser'
+
+  # Talon Cyber Security Browser
+  - regex: '(Talon)'
+    family_replacement: 'Talon Cyber Security Browser'
+
+  # QAX Browser
+  - regex: '(Qaxbrowser)'
+    family_replacement: 'QAX Browser'
+
+  # AOL Desktop Gold Browser
+  - regex: '(ADG)/(\d+)\.(\d+)\.(\d+)'
+    family_replacement: 'AOL Desktop Gold Browser'
+
+  # Sber Browser
+  - regex: '(SberBrowser)/(\d+)\.(\d+)\.(\d+)\.(\d+)'
+    family_replacement: 'Sber Browser'
+
+  # JiSu Browser
+  - regex: '(JiSu)/(\d+)\.(\d+)\.(\d+)'
+    family_replacement: 'JiSu Browser'
 
   #### END SPECIAL CASES TOP ####
 
