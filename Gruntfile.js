@@ -7,8 +7,8 @@
 module.exports = function(grunt) {
     // CONFIGURATION
     grunt.initConfig({
-        secret: grunt.file.readJSON('secret.json'),
         pkg: grunt.file.readJSON('package.json'),
+        secret: grunt.file.readJSON('secret.json'),
         curl: {
             'regexes': {
                 src: 'https://raw.githubusercontent.com/ua-parser/uap-core/master/regexes.yaml',
@@ -44,7 +44,7 @@ module.exports = function(grunt) {
             convertYAML: {
                 command: [
                     '@echo off',
-                    'cd YamlConverter\\bin\\Debug\\net8.0\\',
+                    'cd YamlConverter\\bin\\Debug\\net9.0\\',
                     'echo convert YAML to JSON',
                     'YamlConverter'
                 ].join('&&')
