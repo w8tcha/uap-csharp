@@ -214,18 +214,12 @@ internal static class Parsers
             };
     }
 
-#pragma warning disable S2190 // Loops and recursions should not be infinite
     private static IEnumerator<T> Generate<T>(T initial, Func<T, T> next)
 
     {
-#pragma warning disable S1994
         for (var state = initial; ; state = next(state))
         {
             yield return state;
         }
-#pragma warning restore S1994
-
-        // ReSharper disable once IteratorNeverReturns
     }
-#pragma warning restore S2190 // Loops and recursions should not be infinite
 }
