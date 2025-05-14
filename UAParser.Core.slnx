@@ -1,0 +1,27 @@
+<Solution>
+  <Folder Name="/Benchmarks/">
+    <Project Path="UAParser.Benchmarks/UAParser.Benchmarks.csproj" />
+  </Folder>
+  <Folder Name="/Converter/">
+    <Project Path="YamlConverter/YamlConverter.csproj" />
+  </Folder>
+  <Folder Name="/Demo/">
+    <Project Path="UAParser.DemoApp/UAParser.DemoApp.csproj" />
+  </Folder>
+  <Folder Name="/Items/">
+    <File Path=".editorconfig" />
+    <File Path="PublicKey.snk" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path="Gruntfile.js" />
+    <File Path="package.json" />
+    <File Path="secret.json" />
+  </Folder>
+  <Folder Name="/source/">
+    <Project Path="UAParser.Core/UAParser.Core.csproj" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="UAParser.Tests/UAParser.Tests.csproj" />
+  </Folder>
+</Solution>
