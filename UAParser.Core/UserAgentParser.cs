@@ -71,6 +71,6 @@ public sealed class UserAgentParser : IUserAgentParser
         return this.httpContextAccessor.HttpContext?.Request.Headers.TryGetValue(UserAgent, out var uaHeader)
                    is true
                    ? uaParser.Parse(uaHeader[0], true)
-                   : default;
+                   : null;
     }
 }

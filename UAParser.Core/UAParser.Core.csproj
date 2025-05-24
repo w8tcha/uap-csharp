@@ -13,14 +13,14 @@
     <AssemblyName>UAParser.Core</AssemblyName>
     <RootNamespace>UAParser</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>4.0.4</Version>
+    <Version>4.0.5</Version>
     <PackageProjectUrl>https://github.com/w8tcha/uap-csharp/</PackageProjectUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <RepositoryUrl>https://github.com/w8tcha/uap-csharp/</RepositoryUrl>
     <PackageDescription>A .NET Core wrapper for the ua-parser library</PackageDescription>
-    <AssemblyVersion>4.0.4</AssemblyVersion>
-    <FileVersion>4.0.4</FileVersion>
+    <AssemblyVersion>4.0.5</AssemblyVersion>
+    <FileVersion>4.0.5</FileVersion>
     <Company />
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>../PublicKey.snk</AssemblyOriginatorKeyFile>
@@ -54,7 +54,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="10.9.0.115408">
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="10.10.0.116381">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
