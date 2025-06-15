@@ -313,6 +313,12 @@ test_cases:
     minor: '1'
     patch: '0'
 
+  - user_agent_string: 'Mozilla/5.0 (Linux; Android 7.1.2; vivo X9Plus Build/N2G47H) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/38.0.2125.102 Mobile Safari/537.36 VivoBrowser/5.2.21'
+    family: 'VivoBrowser'
+    major: '5'
+    minor: '2'
+    patch: '21'
+
   - user_agent_string: 'Mozilla/5.0 (Linux; U; Android 13; zh-cn; Infinix X6833B Build/SP1A.210812.016) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/103.0.5060.129 HiBrowser/v2.10.1.2 UWS/ Mobile Safari/537.36'
     family: 'HiBrowser'
     major: '2'
@@ -2662,6 +2668,18 @@ test_cases:
     family: 'Other'
     major:
     minor:
+    patch:
+
+  - user_agent_string: 'Mozilla/5.0 (compatible; Google-InspectionTool/1.0;)'
+    family: 'Google-InspectionTool'
+    major: '1'
+    minor: '0'
+    patch:
+
+  - user_agent_string: 'Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.6367.201 Mobile Safari/537.36 (compatible; Google-InspectionTool/1.0;)'
+    family: 'Google-InspectionTool'
+    major: '1'
+    minor: '0'
     patch:
 
   - user_agent_string: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.78 Safari/537.36'
@@ -9098,4 +9116,10 @@ test_cases:
     family: 'JiSu Browser'
     major: '118'
     minor: '0'
+    patch: '1'
+
+  - user_agent_string: 'Mozilla/5.0 (Android 14; Mobile VR; rv:128.0) Gecko/128.0 Firefox/128.0 Wolvic/1.8.1'
+    family: 'Wolvic Browser'
+    major: '1'
+    minor: '8'
     patch: '1'
