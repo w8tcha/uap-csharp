@@ -15,8 +15,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="BenchmarkDotNet" Version="0.15.1" />
-        <PackageReference Include="BenchmarkDotNet.Diagnostics.Windows" Version="0.15.1" Condition="'$(OS)' == 'Windows_NT'" />
+        <PackageReference Include="BenchmarkDotNet" Version="0.15.2" />
+        <PackageReference Include="BenchmarkDotNet.Diagnostics.Windows" Version="0.15.2" Condition="'$(OS)' == 'Windows_NT'" />
         <PackageReference Include="MyCSharp.HttpUserAgentParser" Version="3.0.25" />
     </ItemGroup>
 
