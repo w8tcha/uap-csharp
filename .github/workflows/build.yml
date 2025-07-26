@@ -22,8 +22,6 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
-      - name: Install dependencies
-        run: dotnet restore UAParser.Core.slnx
       - name: Build
         run: dotnet build UAParser.Core.slnx
       - run: npm install
