@@ -14,20 +14,19 @@
 // limitations under the License.
 //
 
-namespace UAParser.Benchmarks;
+using Ng.Services;
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
+namespace UAParser.Benchmarks;
 
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Configs;
-
 using DeviceDetectorNET;
-
 using MyCSharp.HttpUserAgentParser;
 using MyCSharp.HttpUserAgentParser.Providers;
-
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using UAParser.Objects;
+using YamlDotNet.Serialization;
 
 [ShortRunJob]
 [MemoryDiagnoser]
@@ -64,6 +63,17 @@ public class LibraryComparisonBenchmarks
     public HttpUserAgentInformation MyCSharpCached()
     {
         return MyCSharpCachedProvider.Parse(this.Data.UserAgent);
+    }
+
+    [Benchmark(Description = "NgUserAgentService")]
+    [BenchmarkCategory("Cached")]
+    public UserAgent NgUserAgentService()
+    {
+        var userAgentService = new UserAgentService();
+
+        var info = userAgentService.Parse(this.Data.UserAgent);
+
+        return info;
     }
 
     [Benchmark(Description = "UAParser")]

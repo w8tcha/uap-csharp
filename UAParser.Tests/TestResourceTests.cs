@@ -24,6 +24,7 @@ using System.Text;
 
 using YamlDotNet.RepresentationModel;
 
+#pragma warning disable IDE1006 // Naming Styles
 public class TestResourceTests
 {
     [Fact]
@@ -133,3 +134,5 @@ public class TestResourceTests
         return testCases;
     }
 }
+
+#pragma warning restore IDE1006 // Naming Styles

@@ -16,17 +16,15 @@
 
 using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Running;
-using System.Reflection;
+
 using UAParser.Benchmarks;
 
 // Needed for DeviceDetector.NET
 // https://github.com/totpero/DeviceDetector.NET/issues/44
 
-var config = ManualConfig.Create(DefaultConfig.Instance)
+ManualConfig.Create(DefaultConfig.Instance)
     .WithOptions(ConfigOptions.DisableOptimizationsValidator);
 
-//BenchmarkSwitcher.FromAssembly(Assembly.GetExecutingAssembly()).Run(args, config);
-
-// Run dotnet run -c Release -- --job short --filter *LibraryComparisonBenchmarks*
-
 BenchmarkRunner.Run<LibraryComparisonBenchmarks>();
+
+//dotnet run -c Release

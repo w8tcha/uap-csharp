@@ -23,6 +23,7 @@ using UAParser.Objects;
 using YamlDotNet.Serialization.NamingConventions;
 using YamlDotNet.Serialization;
 
+#pragma warning disable IDE1006 // Naming Styles
 public class ParserTests
 {
     [Fact]
@@ -50,12 +51,12 @@ public class ParserTests
             yamlContent,
             new ParserOptions { MatchTimeOut = TimeSpan.FromSeconds(1), });
 
-        // this loads a backtracking-sensible regular expression and we'll attempt to match it with
+        // this loads a backtracking-sensible regular expression, and we'll attempt to match it with
         // a long string that should trigger the backtracking,
-        const string Input = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa>";
+        const string input = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa>";
 
         var start = DateTime.UtcNow;
-        var match = parser.ParseUserAgent(Input);
+        var match = parser.ParseUserAgent(input);
         Assert.Equal(Parser.Other, match.Family);
         var duration = DateTime.UtcNow.Subtract(start);
 
@@ -83,3 +84,5 @@ public class ParserTests
         return new Parser(regexList, parserOptions);
     }
 }
+
+#pragma warning restore IDE1006 // Naming Styles

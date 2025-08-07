@@ -70,3 +70,4 @@ UAParser.Core.sln.GhostDoc.xml
 /UAParser.Tests/bin
 publish.bat
 /YamlConverter/bin
+/UAParser.Benchmarks/BenchmarkDotNet.Artifacts
