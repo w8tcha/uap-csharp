@@ -18,6 +18,4 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace UAParser.DemoApp.Pages;
 
-public class IndexModel : PageModel
-{
-}
+public class IndexModel : PageModel;

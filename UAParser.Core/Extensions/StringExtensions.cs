@@ -30,10 +30,7 @@ internal static class StringExtensions
     /// <exception cref="System.ArgumentNullException">input</exception>
     public static string ReplaceFirstOccurrence(this string input, string search, string replacement)
     {
-        if (input is null)
-        {
-            throw new ArgumentNullException(nameof(input));
-        }
+        ArgumentNullException.ThrowIfNull(input);
 
         var index = input.IndexOf(search, StringComparison.Ordinal);
         return index >= 0
