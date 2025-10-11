@@ -29,6 +29,7 @@ using UAParser.Objects;
 /// </summary>
 public sealed class UserAgentParser : IUserAgentParser
 {
+    /// <summary>The client information</summary>
     private readonly Lazy<IUAParserOutput> clientInfo;
 
     private readonly IHttpContextAccessor httpContextAccessor;

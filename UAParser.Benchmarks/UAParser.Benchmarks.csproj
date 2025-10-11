@@ -15,7 +15,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="BenchmarkDotNet" Version="0.15.2" />
+        <PackageReference Include="BenchmarkDotNet" Version="0.15.4" />
         <PackageReference Include="MyCSharp.HttpUserAgentParser" Version="3.0.28" />
         <PackageReference Include="Ng.UserAgentService" Version="3.0.0" />
     </ItemGroup>
