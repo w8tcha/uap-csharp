@@ -96,7 +96,7 @@ public class UserAgentYamlTestCase : YamlTestCase
                          Family = map["family"],
                          Major = map["major"],
                          Minor = map["minor"],
-                         Patch = map["patch"],
+                         Patch = map["patch"]
                      };
         return tc;
     }
