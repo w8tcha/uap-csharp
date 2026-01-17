@@ -20,13 +20,16 @@ namespace UAParser.Benchmarks;
 
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Configs;
+
 using DeviceDetectorNET;
+
 using MyCSharp.HttpUserAgentParser;
 using MyCSharp.HttpUserAgentParser.Providers;
+
 using System.Collections.Generic;
 using System.Threading.Tasks;
+
 using UAParser.Objects;
-using YamlDotNet.Serialization;
 
 [ShortRunJob]
 [MemoryDiagnoser]

@@ -28,7 +28,7 @@ internal static class InternalExtensions
 {
     internal static List<Dictionary<string, string>> ConvertToDictionaryList(this YamlSequenceNode yamlNode)
     {
-        return yamlNode.OfType<YamlMappingNode>().Select(ConvertToDictionary).ToList();
+        return [.. yamlNode.OfType<YamlMappingNode>().Select(ConvertToDictionary)];
     }
 
     internal static Dictionary<string, string> ConvertToDictionary(this YamlMappingNode yamlNode)

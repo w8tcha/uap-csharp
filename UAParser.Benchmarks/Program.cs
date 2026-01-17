@@ -27,4 +27,4 @@ ManualConfig.Create(DefaultConfig.Instance)
 
 BenchmarkRunner.Run<LibraryComparisonBenchmarks>();
 
-//dotnet run -c Release
+//dotnet run -c Release --framework net10.0
