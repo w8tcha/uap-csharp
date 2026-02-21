@@ -14,8 +14,6 @@
 // limitations under the License.
 //
 
-using UAParser.Implementation;
-
 namespace UAParser.Tests;
 
 public abstract class YamlTestCase

@@ -17,7 +17,6 @@
 namespace UAParser.Tests;
 
 using System.Collections.Generic;
-using UAParser.Implementation;
 
 /// <summary>
 /// Class DeviceYamlTestCase.

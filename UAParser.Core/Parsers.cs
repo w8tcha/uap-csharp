@@ -117,11 +117,12 @@ internal static class Parsers
                    : Replace(replacement);
     }
 
-    private static readonly string[] AllReplacementTokens = {
-                                                                    "$1", "$2", "$3", "$4",
+    private static readonly string[] AllReplacementTokens =
+    [
+        "$1", "$2", "$3", "$4",
                                                                     "$5", "$6", "$7", "$8",
                                                                     "$9"
-                                                                };
+    ];
 
     private static Func<Match, IEnumerator<int>, string> ReplaceAll(string replacement)
     {
