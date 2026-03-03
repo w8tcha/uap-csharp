@@ -1,7 +1,4 @@
 <Solution>
-  <Folder Name="/Benchmarks/">
-    <Project Path="UAParser.Benchmarks/UAParser.Benchmarks.csproj" />
-  </Folder>
   <Folder Name="/Converter/">
     <Project Path="YamlConverter/YamlConverter.csproj" />
   </Folder>
