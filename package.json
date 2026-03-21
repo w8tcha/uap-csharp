@@ -9,5 +9,14 @@
         "grunt-curl": "^2.5.1",
         "grunt-shell": "^4.0.0",
         "uap-core": "^0.18.0"
+    },
+    "scripts": {
+        "update": "grunt",
+        "updatePackages": "npm-check -y"
+    },
+    "dependencies": {
+        "safe-regex": "^2.1.1",
+        "uap-ref-impl": "^0.3.1",
+        "yamlparser": "^0.0.2"
     }
 }
