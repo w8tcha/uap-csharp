@@ -45,7 +45,7 @@ module.exports = function (grunt) {
             convertYAML: {
                 command: [
                     '@echo off',
-                    'cd YamlConverter\\bin\\Debug\\net9.0\\',
+                    'cd YamlConverter\\bin\\Debug\\net10.0\\',
                     'echo convert YAML to JSON',
                     'YamlConverter'
                 ].join('&&')
