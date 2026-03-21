@@ -14,6 +14,8 @@
 // limitations under the License.
 //
 
+using System.Linq;
+
 namespace UAParser;
 
 using System;
@@ -110,18 +112,17 @@ internal static class Parsers
         string token)
     {
         return replacement is not null && replacement.Contains(token)
-                   ? Select(
-                       s => s is not null
-                                ? replacement.ReplaceFirstOccurrence(token, s)
-                                : replacement)
-                   : Replace(replacement);
+            ? Select(s => s is not null
+                ? replacement.ReplaceFirstOccurrence(token, s)
+                : replacement)
+            : Replace(replacement);
     }
 
     private static readonly string[] AllReplacementTokens =
     [
         "$1", "$2", "$3", "$4",
-                                                                    "$5", "$6", "$7", "$8",
-                                                                    "$9"
+        "$5", "$6", "$7", "$8",
+        "$9"
     ];
 
     private static Func<Match, IEnumerator<int>, string> ReplaceAll(string replacement)
@@ -132,38 +133,38 @@ internal static class Parsers
         }
 
         return (m, _) =>
+        {
+            var finalString = replacement;
+
+            if (!finalString.Contains('$')) return finalString;
+
+            var groups = m.Groups;
+            for (var i = 0; i < AllReplacementTokens.Length; i++)
             {
-                var finalString = replacement;
-
-                if (!finalString.Contains('$')) return finalString;
-
-                var groups = m.Groups;
-                for (var i = 0; i < AllReplacementTokens.Length; i++)
+                var tokenNumber = i + 1;
+                var token = AllReplacementTokens[i];
+                if (finalString.Contains(token))
                 {
-                    var tokenNumber = i + 1;
-                    var token = AllReplacementTokens[i];
-                    if (finalString.Contains(token))
+                    var replacementText = string.Empty;
+
+                    if (tokenNumber <= groups.Count)
                     {
-                        var replacementText = string.Empty;
-
-                        if (tokenNumber <= groups.Count)
+                        var group = groups[tokenNumber];
+                        if (group.Success)
                         {
-                            var group = groups[tokenNumber];
-                            if (group.Success)
-                            {
-                                replacementText = group.Value;
-                            }
+                            replacementText = group.Value;
                         }
-
-                        finalString = ReplaceFunction(finalString, replacementText, token);
                     }
 
-                    if (!finalString.Contains('$'))
-                        break;
+                    finalString = ReplaceFunction(finalString, replacementText, token);
                 }
 
-                return finalString;
-            };
+                if (!finalString.Contains('$'))
+                    break;
+            }
+
+            return finalString;
+        };
 
         static string ReplaceFunction(
             string replacementString,
@@ -171,28 +172,28 @@ internal static class Parsers
             string token)
         {
             return matchedGroup is not null
-                       ? replacementString.ReplaceFirstOccurrence(token, matchedGroup)
-                       : replacementString;
+                ? replacementString.ReplaceFirstOccurrence(token, matchedGroup)
+                : replacementString;
         }
     }
 
     private static Func<Match, IEnumerator<int>, T> Select<T>(Func<string, T> selector)
     {
         return (m, num) =>
+        {
+            if (!num.MoveNext())
             {
-                if (!num.MoveNext())
-                {
-                    throw new InvalidOperationException();
-                }
+                throw new InvalidOperationException();
+            }
 
-                var groups = m.Groups;
-                var group = groups[num.Current];
+            var groups = m.Groups;
+            var group = groups[num.Current];
 
-                return selector(
-                    num.Current <= groups.Count && group.Success
-                        ? group.Value
-                        : null);
-            };
+            return selector(
+                num.Current <= groups.Count && group.Success
+                    ? group.Value
+                    : null);
+        };
     }
 
     private static Func<string, T> Create<T>(
@@ -200,27 +201,19 @@ internal static class Parsers
         Func<Match, IEnumerator<int>, T> binder)
     {
         return input =>
-            {
-                try
-                {
-                    var m = regex.Match(input);
-                    var num = Generate(1, n => n + 1);
-                    return m.Success ? binder(m, num) : default;
-                }
-                catch (RegexMatchTimeoutException)
-                {
-                    // we'll simply swallow this exception and return the default (non-matched)
-                    return default;
-                }
-            };
-    }
-
-    private static IEnumerator<T> Generate<T>(T initial, Func<T, T> next)
-
-    {
-        for (var state = initial; ; state = next(state))
         {
-            yield return state;
-        }
+            try
+            {
+                var m = regex.Match(input);
+
+                using var num = Enumerable.Range(1, int.MaxValue).GetEnumerator();
+                return m.Success ? binder(m, num) : default;
+            }
+            catch (RegexMatchTimeoutException)
+            {
+                // we'll simply swallow this exception and return the default (non-matched)
+                return default;
+            }
+        };
     }
 }
