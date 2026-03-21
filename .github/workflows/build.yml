@@ -11,13 +11,14 @@ jobs:
     strategy:
       matrix:
         dotnet-version: [ '10.0.x' ]
+        node-version: [latest]
 
     steps:
       - uses: actions/checkout@v6
       - name: Install dependencies
         uses: actions/setup-node@v6
         with:
-          node-version: [latest]
+          node-version: ${{ matrix.node-version }}
       - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
         uses: actions/setup-dotnet@v5
         with:
