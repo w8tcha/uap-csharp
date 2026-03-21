@@ -38,6 +38,19 @@ internal static class Parsers
         // For variable replacements to be consistent the order of the linq statements are important ($1
         // is only available to the first 'from X in Replace(..)' and so forth) so a bit of conditional
         // is required to get the creations to work. This is backed by unit tests
+        if (v2Replacement is "$1")
+        {
+            return Create(
+                regex,
+                from v2 in Replace(v2Replacement, "$1")
+                from v1 in Replace(v1Replacement, "$1")
+                from v3 in Replace(v3Replacement, "$3")
+                from v4 in Replace(v4Replacement, "$4")
+                from family in Replace(osReplacement, "$5")
+                select new OS(family, v1, v2, v3, v4));
+        }
+
+
         if (v1Replacement is not "$1")
         {
             return Create(

@@ -17,7 +17,6 @@
 namespace UAParser.Tests;
 
 using System.Collections.Generic;
-using YamlDotNet.Core;
 
 /// <summary>
 /// Class DeviceYamlTestCase.

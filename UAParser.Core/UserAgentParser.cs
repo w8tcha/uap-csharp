@@ -30,11 +30,11 @@ using UAParser.Objects;
 public sealed class UserAgentParser : IUserAgentParser
 {
     /// <summary>The client information</summary>
-    private readonly Lazy<IUAParserOutput> clientInfo;
+    private readonly Lazy<IUAParserOutput> _clientInfo;
 
-    private readonly IHttpContextAccessor httpContextAccessor;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    private readonly IMemoryCache cache;
+    private readonly IMemoryCache _cache;
 
     private const string UserAgent = "User-Agent";
 
@@ -45,15 +45,15 @@ public sealed class UserAgentParser : IUserAgentParser
     /// <param name="memoryCache">The memory cache.</param>
     public UserAgentParser(IHttpContextAccessor httpContextAccessor, IMemoryCache memoryCache)
     {
-        this.httpContextAccessor = httpContextAccessor;
-        this.clientInfo = this.GetBrowserLazy();
-        this.cache = memoryCache;
+        this._httpContextAccessor = httpContextAccessor;
+        this._clientInfo = this.GetBrowserLazy();
+        this._cache = memoryCache;
     }
 
     /// <summary>
     /// Gets the browser information.
     /// </summary>
-    public IUAParserOutput ClientInfo => this.clientInfo.Value;
+    public IUAParserOutput ClientInfo => this._clientInfo.Value;
 
     private Lazy<IUAParserOutput> GetBrowserLazy()
     {
@@ -67,9 +67,9 @@ public sealed class UserAgentParser : IUserAgentParser
     private ClientInfo GetBrowser()
     {
         // get a parser with the embedded regex patterns
-        var uaParser = Parser.GetDefault(new ParserOptions { UseCompiledRegex = true } , this.cache);
+        var uaParser = Parser.GetDefault(new ParserOptions { UseCompiledRegex = true } , this._cache);
 
-        return this.httpContextAccessor.HttpContext?.Request.Headers.TryGetValue(UserAgent, out var uaHeader)
+        return this._httpContextAccessor.HttpContext?.Request.Headers.TryGetValue(UserAgent, out var uaHeader)
                    is true
                    ? uaParser.Parse(uaHeader[0], true)
                    : null;

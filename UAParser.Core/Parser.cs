@@ -39,25 +39,25 @@ public sealed class Parser
     /// </summary>
     public const string Other = "Other";
 
-    private readonly Func<string, OS> osParser;
+    private readonly Func<string, OS> _osParser;
 
-    private readonly Func<string, Device> deviceParser;
+    private readonly Func<string, Device> _deviceParser;
 
-    private readonly Func<string, Browser> userAgentParser;
+    private readonly Func<string, Browser> _userAgentParser;
 
-    private static IMemoryCache cache;
+    private static IMemoryCache _cache;
 
     public Parser(Selectors regexList, ParserOptions options)
     {
         var config = new Config(options ?? new ParserOptions());
 
-        this.userAgentParser = CreateParser(
+        this._userAgentParser = CreateParser(
             regexList.user_agent_parsers.Select(config.UserAgentSelector),
             new Browser(Other, null, null, null));
-        this.osParser = CreateParser(
+        this._osParser = CreateParser(
             regexList.os_parsers.Select(config.OSSelector),
             new OS(Other, null, null, null, null));
-        this.deviceParser = CreateParser(
+        this._deviceParser = CreateParser(
             regexList.device_parsers.Select(config.DeviceSelector),
             new Device(Other, string.Empty, string.Empty));
     }
@@ -78,7 +78,7 @@ public sealed class Parser
 
         var regexList = JsonSerializer.Deserialize<Selectors>(reader.ReadToEnd());
 
-        cache = memoryCache ?? new MemoryCache(new MemoryCacheOptions());
+        _cache = memoryCache ?? new MemoryCache(new MemoryCacheOptions());
 
         return new Parser(regexList, parserOptions);
     }
@@ -100,7 +100,7 @@ public sealed class Parser
 
         var regexList = await JsonSerializer.DeserializeAsync<Selectors>(stream);
 
-        cache = memoryCache ?? new MemoryCache(new MemoryCacheOptions());
+        _cache = memoryCache ?? new MemoryCache(new MemoryCacheOptions());
 
         return new Parser(regexList, parserOptions);
     }
@@ -141,7 +141,7 @@ public sealed class Parser
     {
         if (useCache)
         {
-            return cache.GetOrCreate(
+            return _cache.GetOrCreate(
                 userAgent,
                 _ =>
                     {
@@ -170,7 +170,7 @@ public sealed class Parser
     {
         if (useCache)
         {
-            return await cache.GetOrCreateAsync(
+            return await _cache.GetOrCreateAsync(
                 userAgent,
                 _ =>
                     {
@@ -196,7 +196,7 @@ public sealed class Parser
     // ReSharper disable once InconsistentNaming
     public OS ParseOS(string userAgent)
     {
-        return this.osParser(userAgent);
+        return this._osParser(userAgent);
     }
 
     /// <summary>
@@ -205,7 +205,7 @@ public sealed class Parser
     /// <param name="userAgent">The user agent string.</param>
     public Device ParseDevice(string userAgent)
     {
-        return this.deviceParser(userAgent);
+        return this._deviceParser(userAgent);
     }
 
     /// <summary>
@@ -214,7 +214,7 @@ public sealed class Parser
     /// <param name="userAgent">The user agent string.</param>
     public Browser ParseUserAgent(string userAgent)
     {
-        return this.userAgentParser(userAgent);
+        return this._userAgentParser(userAgent);
     }
 
     /// <summary>
