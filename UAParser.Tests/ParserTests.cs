@@ -26,23 +26,23 @@ using YamlDotNet.Serialization;
 #pragma warning disable IDE1006 // Naming Styles
 public class ParserTests
 {
-    [Fact]
+    [Test]
     public void can_get_default_parser()
     {
         var parser = Parser.GetDefault();
-        Assert.NotNull(parser);
+        parser.Should().NotBeNull();
     }
 
-    [Fact]
+    [Test]
     public void can_get_parser_from_input()
     {
         var yamlContent = this.GetTestResources("UAParser.Tests.Regexes.regexes.yaml");
 
         var parser = FromYaml(yamlContent);
-        Assert.NotNull(parser);
+        parser.Should().NotBeNull();
     }
 
-    [Fact]
+    [Test]
     public void can_utilize_regex_timeouts()
     {
         var yamlContent = this.GetTestResources("UAParser.Tests.Regexes.backtracking.yaml");
@@ -57,14 +57,16 @@ public class ParserTests
 
         var start = DateTime.UtcNow;
         var match = parser.ParseUserAgent(input);
-        Assert.Equal(Parser.Other, match.Family);
+
+        match.Family.Should().Be(Parser.Other);
+
         var duration = DateTime.UtcNow.Subtract(start);
 
         // without the match timeout in place, the regex will do massive backtracking and would run for
         // a very long time (at least on my machine). I will attempt to assert on the duration
         // even though I realize that this is potentially a brittle approach
-        Assert.True(
-            duration < TimeSpan.FromSeconds(3),
+
+        (duration < TimeSpan.FromSeconds(3)).Should().BeTrue(
             $"The match takes longer than 3 seconds (took {duration}). The MatchTimeOut should have stopped it at 1 second, but this may just be a brittle test due to e.g. shared resources on a CI server");
     }
 

@@ -27,7 +27,7 @@ using YamlDotNet.RepresentationModel;
 #pragma warning disable IDE1006 // Naming Styles
 public class TestResourceTests
 {
-    [Fact]
+    [Test]
     public void can_run_device_tests()
     {
         this.RunTests(
@@ -35,7 +35,7 @@ public class TestResourceTests
             DeviceYamlTestCase.ReadFromMap);
     }
 
-    [Fact]
+    [Test]
     public void can_run_additional_os_tests()
     {
         this.RunTests(
@@ -43,7 +43,7 @@ public class TestResourceTests
             OSYamlTestCase.ReadFromMap);
     }
 
-    [Fact]
+    [Test]
     public void can_run_firefox_user_agent_string_tests()
     {
         this.RunTests(
@@ -51,7 +51,7 @@ public class TestResourceTests
             UserAgentYamlTestCase.ReadFromMap);
     }
 
-    [Fact]
+    [Test]
     public void can_run_pgts_browser_list_tests()
     {
         this.RunTests(
@@ -59,7 +59,7 @@ public class TestResourceTests
             UserAgentYamlTestCase.ReadFromMap);
     }
 
-    [Fact]
+    [Test]
     public void can_run_user_agent_parser_tests()
     {
         this.RunTests(
@@ -67,7 +67,7 @@ public class TestResourceTests
             UserAgentYamlTestCase.ReadFromMap);
     }
 
-    [Fact]
+    [Test]
     public void can_run_user_agent_parser_os_tests()
     {
         this.RunTests("UAParser.Tests.TestResources.test_os.yaml", OSYamlTestCase.ReadFromMap);
@@ -87,7 +87,8 @@ public class TestResourceTests
         where TTestCase : YamlTestCase
     {
         var parser = Parser.GetDefault();
-        Assert.NotEmpty(testCases);
+
+        testCases.Should().NotBeEmpty();
 
         var sb = new StringBuilder();
         for (var i = 0; i < testCases.Count; i++)
@@ -107,7 +108,7 @@ public class TestResourceTests
             }
         }
 
-        Assert.True(0 == sb.Length, $"Failed tests: {Environment.NewLine}{sb}");
+        (0 == sb.Length).Should().BeTrue($"Failed tests: {Environment.NewLine}{sb}");
     }
 
     public List<TTestCase> GetTestCases<TTestCase>(

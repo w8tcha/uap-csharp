@@ -17,6 +17,7 @@
 namespace UAParser.Tests;
 
 using System.Collections.Generic;
+using YamlDotNet.Core;
 
 /// <summary>
 /// Class DeviceYamlTestCase.
@@ -39,7 +40,8 @@ public class DeviceYamlTestCase : YamlTestCase
 
     public override void Verify(ClientInfo clientInfo)
     {
-        Assert.NotNull(clientInfo);
+        clientInfo.Should().NotBeNull();
+
         this.AssertMatch(this.Family, clientInfo.Device.Family, "Family");
     }
 }
@@ -77,7 +79,8 @@ public class OSYamlTestCase : YamlTestCase
 
     public override void Verify(ClientInfo clientInfo)
     {
-        Assert.NotNull(clientInfo);
+        clientInfo.Should().NotBeNull();
+
         this.AssertMatch(this.Family, clientInfo.OS.Family, "Family");
         this.AssertMatch(this.Major, clientInfo.OS.Major, "Major");
         this.AssertMatch(this.Minor, clientInfo.OS.Minor, "Minor");
@@ -111,7 +114,8 @@ public class UserAgentYamlTestCase : YamlTestCase
 
     public override void Verify(ClientInfo clientInfo)
     {
-        Assert.NotNull(clientInfo);
+        clientInfo.Should().NotBeNull();
+
         this.AssertMatch(this.Family, clientInfo.Browser.Family, "Family");
         this.AssertMatch(this.Major, clientInfo.Browser.Major, "Major");
         this.AssertMatch(this.Minor, clientInfo.Browser.Minor, "Minor");

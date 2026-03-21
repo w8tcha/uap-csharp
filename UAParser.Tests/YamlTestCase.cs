@@ -33,7 +33,8 @@ public abstract class YamlTestCase
                 return;
         }
 
-        Assert.True(expected.Equals(actual),
-            $"{type} did not match. (expected:{expected} actual:{actual})  in {this.UserAgent}");
+        (expected.Equals(actual)).Should()
+            .BeTrue(
+                $"{type} did not match. (expected:{expected} actual:{actual})  in {this.UserAgent}");
     }
 }

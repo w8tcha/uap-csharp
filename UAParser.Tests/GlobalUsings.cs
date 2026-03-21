@@ -2,4 +2,6 @@
 
 global using global::UAParser.Objects;
 
-global using Xunit;
+global using AwesomeAssertions;
+
+global using NUnit.Framework;
