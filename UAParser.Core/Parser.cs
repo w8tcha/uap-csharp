@@ -39,6 +39,9 @@ public sealed class Parser
     /// </summary>
     public const string Other = "Other";
 
+    private static readonly object DefaultParserLock = new object();
+    private static Parser _defaultParser;
+
     private readonly Func<string, OS> _osParser;
 
     private readonly Func<string, Device> _deviceParser;
@@ -47,6 +50,11 @@ public sealed class Parser
 
     private static IMemoryCache _cache;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Parser"/> class.
+    /// </summary>
+    /// <param name="regexList">The regex list.</param>
+    /// <param name="options">The options.</param>
     public Parser(Selectors regexList, ParserOptions options)
     {
         var config = new Config(options ?? new ParserOptions());
@@ -64,16 +72,37 @@ public sealed class Parser
 
     /// <summary>
     /// Returns a <see cref="Parser"/> instance based on the embedded regex definitions.
-    /// <remarks>The embedded regex definitions may be outdated. Consider passing in external json definitions using <see cref="Parser.FromJson"/></remarks>
     /// </summary>
+    /// <remarks>
+    /// Parser construction is relatively expensive because the embedded yaml definitions must be parsed and
+    /// the regex structures must be built. Reuse the returned parser instead of creating one per request.
+    /// The parameterless overload returns a cached default parser for this reason. The embedded regex definitions
+    /// may be outdated, so consider passing in external yaml definitions using <see cref="Parser.FromJson"/>.
+    /// </remarks>
     /// <param name="parserOptions">specifies the options for the parser</param>
     /// <param name="memoryCache">the memory cache</param>
     /// <returns></returns>
     public static Parser GetDefault(ParserOptions parserOptions = null, IMemoryCache memoryCache = null)
     {
+        if (parserOptions != null)
+            return CreateDefaultParser(parserOptions, memoryCache);
+
+        if (_defaultParser != null)
+            return _defaultParser;
+
+        lock (DefaultParserLock)
+        {
+            _defaultParser ??= CreateDefaultParser(null, memoryCache);
+        }
+
+        return _defaultParser;
+    }
+
+    private static Parser CreateDefaultParser(ParserOptions parserOptions, IMemoryCache memoryCache = null)
+    {
         using var stream = typeof(Parser)
             .GetTypeInfo()
-            .Assembly.GetManifestResourceStream("UAParser.regexes.json");
+            .Assembly.GetManifestResourceStream("UAParser.regexes.json")!;
         using var reader = new StreamReader(stream);
 
         var regexList = JsonSerializer.Deserialize<Selectors>(reader.ReadToEnd());
@@ -108,6 +137,10 @@ public sealed class Parser
     /// <summary>
     /// Load Parser with regex definitions from a JSON string
     /// </summary>
+    /// <remarks>
+    /// Parser construction is relatively expensive because the yaml definitions must be parsed and
+    /// the regex structures must be built. Reuse the returned parser instead of creating one per request.
+    /// </remarks>
     /// <param name="jsonString">The json string.</param>
     /// <param name="parserOptions">The parser options.</param>
     /// <returns>Parser.</returns>

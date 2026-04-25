@@ -34,6 +34,24 @@ public class ParserTests
     }
 
     [Test]
+    public void parameterless_get_default_returns_cached_parser()
+    {
+        var first = Parser.GetDefault();
+        var second = Parser.GetDefault();
+
+        second.Should().BeSameAs(first);
+    }
+
+    [Test]
+    public void get_default_with_options_returns_a_new_parser()
+    {
+        var cachedDefault = Parser.GetDefault();
+        var configured = Parser.GetDefault(new ParserOptions());
+
+        configured.Should().NotBeSameAs(cachedDefault);
+    }
+
+    [Test]
     public void can_get_parser_from_input()
     {
         var yamlContent = this.GetTestResources("UAParser.Tests.Regexes.regexes.yaml");
