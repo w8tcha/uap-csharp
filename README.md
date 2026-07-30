@@ -26,7 +26,8 @@ Update the embedded regexes
 To pull the latest regexes into the project:
 
 ```` cmd
-> npm install && grunt
+> npm install
+> npm run update
 ````
 
 ## How to use ?

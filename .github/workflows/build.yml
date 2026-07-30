@@ -26,6 +26,6 @@ jobs:
       - name: Build
         run: dotnet build UAParser.Core.slnx
       - run: npm install
-      - run: grunt
+      - run: npm run update
       - name: Test
         run: dotnet test UAParser.Core.slnx

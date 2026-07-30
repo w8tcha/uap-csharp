@@ -3,16 +3,12 @@
     "version": "4.0.5",
     "private": true,
     "devDependencies": {
-        "@lodder/time-grunt": "^4.0.0",
-        "@w8tcha/grunt-dev-update": "^2.3.4",
-        "grunt": "^1.6.2",
-        "grunt-curl": "^2.5.1",
-        "grunt-shell": "^4.0.0",
         "uap-core": "^0.18.0"
     },
     "scripts": {
-        "update": "grunt",
-        "updatePackages": "npm-check -y"
+        "update": "node scripts/fetch-regexes.mjs && node scripts/convert-yaml.mjs",
+        "publish": "node scripts/publish-nuget.mjs",
+        "updatePackages": "set npm_config_allow_scripts=&& npm-check -y"
     },
     "dependencies": {
         "safe-regex": "^2.1.1",
