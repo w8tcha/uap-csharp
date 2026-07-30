@@ -62,7 +62,6 @@ packages/
 
 
 node_modules/
-package-lock.json
 UAParser.Core.sln.GhostDoc.xml
 /UAParser.Benchmarks/bin
 /UAParser.Core/bin

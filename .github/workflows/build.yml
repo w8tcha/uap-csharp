@@ -25,7 +25,7 @@ jobs:
           dotnet-version: ${{ matrix.dotnet-version }}
       - name: Build
         run: dotnet build UAParser.Core.slnx
-      - run: npm install
+      - run: npm ci
       - run: npm run update
       - name: Test
         run: dotnet test UAParser.Core.slnx

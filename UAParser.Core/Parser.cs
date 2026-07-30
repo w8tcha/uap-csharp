@@ -102,7 +102,7 @@ public sealed class Parser
     {
         using var stream = typeof(Parser)
             .GetTypeInfo()
-            .Assembly.GetManifestResourceStream("UAParser.regexes.json")!;
+            .Assembly.GetManifestResourceStream("UAParser.regexes.json");
         using var reader = new StreamReader(stream);
 
         var regexList = JsonSerializer.Deserialize<Selectors>(reader.ReadToEnd());
