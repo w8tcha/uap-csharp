@@ -38,6 +38,13 @@ public sealed class UserAgentParser : IUserAgentParser
 
     private const string UserAgent = "User-Agent";
 
+    private static readonly object CompiledParserLock = new object();
+
+    // Building the compiled-regex parser is expensive (regex compilation for hundreds of
+    // patterns), so it is built once per process and reused across requests instead of on
+    // every scoped UserAgentParser instance.
+    private static Parser _compiledParser;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="UserAgentParser"/> class.
     /// </summary>
@@ -66,12 +73,24 @@ public sealed class UserAgentParser : IUserAgentParser
     /// <returns>The IBrowser instance.</returns>
     private ClientInfo GetBrowser()
     {
-        // get a parser with the embedded regex patterns
-        var uaParser = Parser.GetDefault(new ParserOptions { UseCompiledRegex = true } , this._cache);
+        var uaParser = GetCompiledParser(this._cache);
 
         return this._httpContextAccessor.HttpContext?.Request.Headers.TryGetValue(UserAgent, out var uaHeader)
                    is true
                    ? uaParser.Parse(uaHeader[0], true)
                    : null;
+    }
+
+    private static Parser GetCompiledParser(IMemoryCache memoryCache)
+    {
+        if (_compiledParser != null)
+            return _compiledParser;
+
+        lock (CompiledParserLock)
+        {
+            _compiledParser ??= Parser.GetDefault(new ParserOptions { UseCompiledRegex = true }, memoryCache);
+        }
+
+        return _compiledParser;
     }
 }

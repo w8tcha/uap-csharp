@@ -27,5 +27,12 @@ jobs:
         run: dotnet build UAParser.Core.slnx
       - run: npm ci
       - run: npm run update
+      - name: Verify regex definitions are up to date
+        shell: bash
+        run: |
+          if ! git diff --exit-code -- UAParser.Core/regexes.yaml UAParser.Core/regexes.json; then
+            echo "::error::UAParser.Core/regexes.yaml or regexes.json is out of date with upstream uap-core. Run 'npm run update' locally and commit the result."
+            exit 1
+          fi
       - name: Test
         run: dotnet test UAParser.Core.slnx

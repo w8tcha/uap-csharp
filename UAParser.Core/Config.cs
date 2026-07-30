@@ -75,6 +75,7 @@ internal class Config
     {
         var pattern = regex
                       ?? throw new ArgumentNullException(
+                          key,
                           $"{key} is missing regular expression specification.");
 
         if (pattern.Contains(@"\_"))

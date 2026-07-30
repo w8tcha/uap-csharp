@@ -48,16 +48,19 @@ public sealed class Parser
 
     private readonly Func<string, Browser> _userAgentParser;
 
-    private static IMemoryCache _cache;
+    private readonly IMemoryCache _cache;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Parser"/> class.
     /// </summary>
     /// <param name="regexList">The regex list.</param>
     /// <param name="options">The options.</param>
-    public Parser(Selectors regexList, ParserOptions options)
+    /// <param name="memoryCache">The memory cache used when parsing with <c>useCache: true</c>. If omitted, a private cache is created for this instance.</param>
+    public Parser(Selectors regexList, ParserOptions options, IMemoryCache memoryCache = null)
     {
         var config = new Config(options ?? new ParserOptions());
+
+        this._cache = memoryCache ?? new MemoryCache(new MemoryCacheOptions());
 
         this._userAgentParser = CreateParser(
             regexList.user_agent_parsers.Select(config.UserAgentSelector),
@@ -107,9 +110,7 @@ public sealed class Parser
 
         var regexList = JsonSerializer.Deserialize<Selectors>(reader.ReadToEnd());
 
-        _cache = memoryCache ?? new MemoryCache(new MemoryCacheOptions());
-
-        return new Parser(regexList, parserOptions);
+        return new Parser(regexList, parserOptions, memoryCache);
     }
 
     /// <summary>
@@ -129,9 +130,7 @@ public sealed class Parser
 
         var regexList = await JsonSerializer.DeserializeAsync<Selectors>(stream);
 
-        _cache = memoryCache ?? new MemoryCache(new MemoryCacheOptions());
-
-        return new Parser(regexList, parserOptions);
+        return new Parser(regexList, parserOptions, memoryCache);
     }
 
     /// <summary>
