@@ -1,13 +1,12 @@
 {
     "name": "uaparser-core",
-    "version": "4.0.5",
+    "version": "4.0.6",
     "private": true,
     "devDependencies": {
         "uap-core": "^0.18.0"
     },
     "scripts": {
         "update": "node scripts/fetch-regexes.mjs && node scripts/convert-yaml.mjs",
-        "publish": "node scripts/publish-nuget.mjs",
         "updatePackages": "set npm_config_allow_scripts=&& npm-check -y"
     },
     "dependencies": {

@@ -7,6 +7,7 @@
   </Folder>
   <Folder Name="/Items/">
     <File Path=".editorconfig" />
+    <File Path=".github/workflows/release.yml" />
     <File Path="PublicKey.snk" />
     <File Path="README.md" />
   </Folder>
@@ -15,7 +16,6 @@
     <File Path="secret.json" />
     <File Path="scripts/fetch-regexes.mjs" />
     <File Path="scripts/convert-yaml.mjs" />
-    <File Path="scripts/publish-nuget.mjs" />
   </Folder>
   <Folder Name="/source/">
     <Project Path="UAParser.Core/UAParser.Core.csproj" />
