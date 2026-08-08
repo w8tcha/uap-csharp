@@ -49,9 +49,13 @@ jobs:
         if: steps.check_tag.outputs.exists == 'false'
         run: dotnet clean UAParser.Core/UAParser.Core.csproj -c Release
 
+      - name: Build
+        if: steps.check_tag.outputs.exists == 'false'
+        run: dotnet build UAParser.Core/UAParser.Core.csproj -c Release
+
       - name: Pack
         if: steps.check_tag.outputs.exists == 'false'
-        run: dotnet pack UAParser.Core/UAParser.Core.csproj -c Release -o artifacts
+        run: dotnet pack UAParser.Core/UAParser.Core.csproj -c Release -o artifacts --no-build
 
       - name: NuGet login (OIDC -> temporary API key)
         if: steps.check_tag.outputs.exists == 'false'
