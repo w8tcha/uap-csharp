@@ -70,3 +70,4 @@ UAParser.Core.sln.GhostDoc.xml
 publish.bat
 /YamlConverter/bin
 /UAParser.Benchmarks/BenchmarkDotNet.Artifacts
+yarn.lock

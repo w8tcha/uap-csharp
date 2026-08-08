@@ -11,9 +11,11 @@
     <File Path="README.md" />
   </Folder>
   <Folder Name="/Solution Items/">
-    <File Path="Gruntfile.js" />
     <File Path="package.json" />
     <File Path="secret.json" />
+    <File Path="scripts/fetch-regexes.mjs" />
+    <File Path="scripts/convert-yaml.mjs" />
+    <File Path="scripts/publish-nuget.mjs" />
   </Folder>
   <Folder Name="/source/">
     <Project Path="UAParser.Core/UAParser.Core.csproj" />
