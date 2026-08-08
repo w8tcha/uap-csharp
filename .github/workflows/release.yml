@@ -45,6 +45,10 @@ jobs:
             echo "exists=false" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Clean
+        if: steps.check_tag.outputs.exists == 'false'
+        run: dotnet clean UAParser.Core/UAParser.Core.csproj -c Release
+
       - name: Pack
         if: steps.check_tag.outputs.exists == 'false'
         run: dotnet pack UAParser.Core/UAParser.Core.csproj -c Release -o artifacts
