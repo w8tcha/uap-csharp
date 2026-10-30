@@ -62,14 +62,16 @@ public sealed class Parser
 
         this._cache = memoryCache ?? new MemoryCache(new MemoryCacheOptions());
 
+        // The selectors are materialized so that the regular expressions are built once per parser
+        // instead of on every parse call.
         this._userAgentParser = CreateParser(
-            regexList.user_agent_parsers.Select(config.UserAgentSelector),
+            regexList.user_agent_parsers.Select(config.UserAgentSelector).ToArray(),
             new Browser(Other, null, null, null));
         this._osParser = CreateParser(
-            regexList.os_parsers.Select(config.OSSelector),
+            regexList.os_parsers.Select(config.OSSelector).ToArray(),
             new OS(Other, null, null, null, null));
         this._deviceParser = CreateParser(
-            regexList.device_parsers.Select(config.DeviceSelector),
+            regexList.device_parsers.Select(config.DeviceSelector).ToArray(),
             new Device(Other, string.Empty, string.Empty));
     }
 
@@ -125,8 +127,6 @@ public sealed class Parser
        await using var stream = typeof(Parser)
             .GetTypeInfo()
             .Assembly.GetManifestResourceStream("UAParser.regexes.json");
-
-        using var reader = new StreamReader(stream);
 
         var regexList = await JsonSerializer.DeserializeAsync<Selectors>(stream);
 

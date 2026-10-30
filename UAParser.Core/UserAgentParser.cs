@@ -73,22 +73,28 @@ public sealed class UserAgentParser : IUserAgentParser
     /// <returns>The IBrowser instance.</returns>
     private ClientInfo GetBrowser()
     {
-        var uaParser = GetCompiledParser(this._cache);
+        if (this._httpContextAccessor.HttpContext?.Request.Headers.TryGetValue(UserAgent, out var uaHeader)
+            is not true)
+        {
+            return null;
+        }
 
-        return this._httpContextAccessor.HttpContext?.Request.Headers.TryGetValue(UserAgent, out var uaHeader)
-                   is true
-                   ? uaParser.Parse(uaHeader[0], true)
-                   : null;
+        var userAgent = uaHeader[0];
+        var uaParser = GetCompiledParser();
+
+        // The injected cache is used here rather than inside the shared parser, so every instance
+        // honors its own cache instead of the one passed to the first instance.
+        return this._cache.GetOrCreate(userAgent, _ => uaParser.Parse(userAgent));
     }
 
-    private static Parser GetCompiledParser(IMemoryCache memoryCache)
+    private static Parser GetCompiledParser()
     {
         if (_compiledParser != null)
             return _compiledParser;
 
         lock (CompiledParserLock)
         {
-            _compiledParser ??= Parser.GetDefault(new ParserOptions { UseCompiledRegex = true }, memoryCache);
+            _compiledParser ??= Parser.GetDefault(new ParserOptions { UseCompiledRegex = true });
         }
 
         return _compiledParser;
