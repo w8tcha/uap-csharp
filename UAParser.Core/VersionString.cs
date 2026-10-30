@@ -16,12 +16,26 @@
 
 namespace UAParser;
 
-using System.Linq;
+using System;
+using System.Text;
 
 internal static class VersionString
 {
-    public static string Format(params string[] parts)
+    public static string Format(params ReadOnlySpan<string> parts)
     {
-        return string.Join(".", parts.Where(v => !string.IsNullOrEmpty(v)).ToArray());
+        var builder = new StringBuilder();
+
+        foreach (var part in parts)
+        {
+            if (string.IsNullOrEmpty(part))
+                continue;
+
+            if (builder.Length > 0)
+                builder.Append('.');
+
+            builder.Append(part);
+        }
+
+        return builder.ToString();
     }
 }

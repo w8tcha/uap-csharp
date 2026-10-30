@@ -30,7 +30,6 @@ public sealed class Browser
         this.Major = major;
         this.Minor = minor;
         this.Patch = patch;
-        this.Version = VersionString.Format(this.Major, this.Minor, this.Patch);
     }
 
     /// <summary>
@@ -57,7 +56,10 @@ public sealed class Browser
     /// Gets the version.
     /// </summary>
     /// <value>The version.</value>
-    public string Version { get; }
+    // formatted on first use, as most callers never read it
+    public string Version => this._version ??= VersionString.Format(this.Major, this.Minor, this.Patch);
+
+    private string _version;
 
     /// <summary>
     /// The user agent as a readable string

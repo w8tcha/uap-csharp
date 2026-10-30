@@ -137,12 +137,35 @@ public class ParserBehaviorTests
     }
 
     [Test]
-    public async Task get_default_async_returns_working_parser()
+    public async Task get_default_async_returns_cached_default_parser()
     {
         var parser = await Parser.GetDefaultAsync();
 
+        parser.Should().BeSameAs(Parser.GetDefault());
+        (await Parser.GetDefaultAsync()).Should().BeSameAs(parser);
+        parser.Parse(ChromeOnWindows).Browser.Family.Should().Be("Chrome");
+    }
+
+    [Test]
+    public async Task get_default_async_with_options_returns_a_new_parser()
+    {
+        var parser = await Parser.GetDefaultAsync(new ParserOptions());
+
         parser.Should().NotBeSameAs(Parser.GetDefault());
         parser.Parse(ChromeOnWindows).Browser.Family.Should().Be("Chrome");
+    }
+
+    [Test]
+    public async Task get_default_async_with_memory_cache_uses_that_cache()
+    {
+        using var cache = new MemoryCache(new MemoryCacheOptions());
+
+        var parser = await Parser.GetDefaultAsync(memoryCache: cache);
+        var clientInfo = await parser.ParseAsync(ChromeOnWindows, useCache: true);
+
+        parser.Should().NotBeSameAs(Parser.GetDefault());
+        cache.TryGetValue(ChromeOnWindows, out ClientInfo cached).Should().BeTrue();
+        cached.Should().BeSameAs(clientInfo);
     }
 
     [Test]

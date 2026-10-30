@@ -14,18 +14,28 @@
 // limitations under the License.
 //
 
-using System.Linq;
-
 namespace UAParser;
 
 using System;
-using System.Collections.Generic;
 
 using UAParser.Extensions;
 using UAParser.Objects;
 
 internal static class Parsers
 {
+    /// <summary>
+    /// Binds a part of a match. Every binder that reads the next regex group advances
+    /// <paramref name="group"/>, so the order in which binders run determines which group they read.
+    /// </summary>
+    private delegate T Binder<out T>(Match match, ref int group);
+
+    private static readonly string[] AllReplacementTokens =
+    [
+        "$1", "$2", "$3", "$4",
+        "$5", "$6", "$7", "$8",
+        "$9"
+    ];
+
     // ReSharper disable once InconsistentNaming
     public static Func<string, OS> OS(
         Regex regex,
@@ -35,54 +45,87 @@ internal static class Parsers
         string v3Replacement,
         string v4Replacement)
     {
-        // For variable replacements to be consistent the order of the linq statements are important ($1
-        // is only available to the first 'from X in Replace(..)' and so forth) so a bit of conditional
-        // is required to get the creations to work. This is backed by unit tests
+        // For variable replacements to be consistent the order in which the binders run is important
+        // ($1 is only available to the first binder and so forth) so a bit of conditional is required
+        // to get the creations to work. This is backed by unit tests
         if (v2Replacement is "$1")
         {
+            var v2 = Replace(v2Replacement, "$1");
+            var v1 = Replace(v1Replacement, "$1");
+            var v3 = Replace(v3Replacement, "$3");
+            var v4 = Replace(v4Replacement, "$4");
+            var family = Replace(osReplacement, "$5");
+
             return Create(
                 regex,
-                from v2 in Replace(v2Replacement, "$1")
-                from v1 in Replace(v1Replacement, "$1")
-                from v3 in Replace(v3Replacement, "$3")
-                from v4 in Replace(v4Replacement, "$4")
-                from family in Replace(osReplacement, "$5")
-                select new OS(family, v1, v2, v3, v4));
+                (Match m, ref int g) =>
+                    {
+                        var minor = v2(m, ref g);
+                        var major = v1(m, ref g);
+                        var patch = v3(m, ref g);
+                        var patchMinor = v4(m, ref g);
+                        return new OS(family(m, ref g), major, minor, patch, patchMinor);
+                    });
         }
-
 
         if (v1Replacement is not "$1")
         {
+            var family = Replace(osReplacement, "$1");
+            var v1 = Replace(v1Replacement, "$2");
+            var v2 = Replace(v2Replacement, "$3");
+            var v3 = Replace(v3Replacement, "$4");
+            var v4 = Replace(v4Replacement, "$5");
+
             return Create(
                 regex,
-                from family in Replace(osReplacement, "$1")
-                from v1 in Replace(v1Replacement, "$2")
-                from v2 in Replace(v2Replacement, "$3")
-                from v3 in Replace(v3Replacement, "$4")
-                from v4 in Replace(v4Replacement, "$5")
-                select new OS(family, v1, v2, v3, v4));
+                (Match m, ref int g) => new OS(family(m, ref g), v1(m, ref g), v2(m, ref g), v3(m, ref g), v4(m, ref g)));
         }
 
         if (v2Replacement is "$2")
         {
+            var v1 = Replace(v1Replacement, "$1");
+            var v2 = Replace(v2Replacement, "$2");
+            var v3 = Replace(v3Replacement, "$3");
+            var v4 = Replace(v4Replacement, "$4");
+            var family = Replace(osReplacement, "$5");
+
             return Create(
                 regex,
-                from v1 in Replace(v1Replacement, "$1")
-                from v2 in Replace(v2Replacement, "$2")
-                from v3 in Replace(v3Replacement, "$3")
-                from v4 in Replace(v4Replacement, "$4")
-                from family in Replace(osReplacement, "$5")
-                select new OS(family, v1, v2, v3, v4));
+                (Match m, ref int g) =>
+                    {
+                        var major = v1(m, ref g);
+                        var minor = v2(m, ref g);
+                        var patch = v3(m, ref g);
+                        var patchMinor = v4(m, ref g);
+                        return new OS(family(m, ref g), major, minor, patch, patchMinor);
+                    });
         }
+
+        return OSWithFamilySecond(regex, osReplacement, v1Replacement, v2Replacement, v3Replacement, v4Replacement);
+    }
+
+    // ReSharper disable once InconsistentNaming
+    private static Func<string, OS> OSWithFamilySecond(
+        Regex regex,
+        string osReplacement,
+        string v1Replacement,
+        string v2Replacement,
+        string v3Replacement,
+        string v4Replacement)
+    {
+        var v1 = Replace(v1Replacement, "$1");
+        var family = Replace(osReplacement, "$2");
+        var v2 = Replace(v2Replacement, "$3");
+        var v3 = Replace(v3Replacement, "$4");
+        var v4 = Replace(v4Replacement, "$5");
 
         return Create(
             regex,
-            from v1 in Replace(v1Replacement, "$1")
-            from family in Replace(osReplacement, "$2")
-            from v2 in Replace(v2Replacement, "$3")
-            from v3 in Replace(v3Replacement, "$4")
-            from v4 in Replace(v4Replacement, "$5")
-            select new OS(family, v1, v2, v3, v4));
+            (Match m, ref int g) =>
+                {
+                    var major = v1(m, ref g);
+                    return new OS(family(m, ref g), major, v2(m, ref g), v3(m, ref g), v4(m, ref g));
+                });
     }
 
     public static Func<string, Device> Device(
@@ -91,12 +134,13 @@ internal static class Parsers
         string brandReplacement,
         string modelReplacement)
     {
+        var family = ReplaceAll(familyReplacement);
+        var brand = ReplaceAll(brandReplacement);
+        var model = ReplaceAll(modelReplacement);
+
         return Create(
             regex,
-            from family in ReplaceAll(familyReplacement)
-            from brand in ReplaceAll(brandReplacement)
-            from model in ReplaceAll(modelReplacement)
-            select new Device(family, brand, model));
+            (Match m, ref int g) => new Device(family(m, ref g), brand(m, ref g), model(m, ref g)));
     }
 
     public static Func<string, Browser> UserAgent(
@@ -106,21 +150,22 @@ internal static class Parsers
         string minorReplacement,
         string patchReplacement)
     {
+        var family = Replace(familyReplacement, "$1");
+        var v1 = Replace(majorReplacement, "$2");
+        var v2 = Replace(minorReplacement, "$3");
+        var v3 = Replace(patchReplacement, "$4");
+
         return Create(
             regex,
-            from family in Replace(familyReplacement, "$1")
-            from v1 in Replace(majorReplacement, "$2")
-            from v2 in Replace(minorReplacement, "$3")
-            from v3 in Replace(patchReplacement, "$4")
-            select new Browser(family, v1, v2, v3));
+            (Match m, ref int g) => new Browser(family(m, ref g), v1(m, ref g), v2(m, ref g), v3(m, ref g)));
     }
 
-    private static Func<Match, IEnumerator<int>, string> Replace(string replacement)
+    private static Binder<string> Replace(string replacement)
     {
         return replacement is not null ? Select(_ => replacement) : Select(v => v);
     }
 
-    private static Func<Match, IEnumerator<int>, string> Replace(
+    private static Binder<string> Replace(
         string replacement,
         string token)
     {
@@ -131,21 +176,14 @@ internal static class Parsers
             : Replace(replacement);
     }
 
-    private static readonly string[] AllReplacementTokens =
-    [
-        "$1", "$2", "$3", "$4",
-        "$5", "$6", "$7", "$8",
-        "$9"
-    ];
-
-    private static Func<Match, IEnumerator<int>, string> ReplaceAll(string replacement)
+    private static Binder<string> ReplaceAll(string replacement)
     {
         if (replacement is null)
         {
             return Select(v => v);
         }
 
-        return (m, _) =>
+        return (Match m, ref int _) =>
         {
             var finalString = replacement;
 
@@ -190,37 +228,36 @@ internal static class Parsers
         }
     }
 
-    private static Func<Match, IEnumerator<int>, T> Select<T>(Func<string, T> selector)
+    private static Binder<T> Select<T>(Func<string, T> selector)
     {
-        return (m, num) =>
+        return (Match m, ref int group) =>
         {
-            if (!num.MoveNext())
-            {
-                throw new InvalidOperationException();
-            }
+            group++;
 
             var groups = m.Groups;
-            var group = groups[num.Current];
+            var matched = groups[group];
 
             return selector(
-                num.Current <= groups.Count && group.Success
-                    ? group.Value
+                group <= groups.Count && matched.Success
+                    ? matched.Value
                     : null);
         };
     }
 
     private static Func<string, T> Create<T>(
         Regex regex,
-        Func<Match, IEnumerator<int>, T> binder)
+        Binder<T> binder)
     {
         return input =>
         {
             try
             {
                 var m = regex.Match(input);
+                if (!m.Success)
+                    return default;
 
-                using var num = Enumerable.Range(1, int.MaxValue).GetEnumerator();
-                return m.Success ? binder(m, num) : default;
+                var group = 0;
+                return binder(m, ref group);
             }
             catch (RegexMatchTimeoutException)
             {
