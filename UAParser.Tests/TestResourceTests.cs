@@ -60,6 +60,22 @@ public class TestResourceTests
     }
 
     [Test]
+    public void can_run_opera_mini_user_agent_string_tests()
+    {
+        this.RunTests(
+            "UAParser.Tests.TestResources.opera_mini_user_agent_strings.yaml",
+            UserAgentYamlTestCase.ReadFromMap);
+    }
+
+    [Test]
+    public void can_run_podcasting_user_agent_string_tests()
+    {
+        this.RunTests(
+            "UAParser.Tests.TestResources.podcasting_user_agent_strings.yaml",
+            UserAgentYamlTestCase.ReadFromMap);
+    }
+
+    [Test]
     public void can_run_user_agent_parser_tests()
     {
         this.RunTests(

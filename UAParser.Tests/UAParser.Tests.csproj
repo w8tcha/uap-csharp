@@ -22,12 +22,18 @@
     <EmbeddedResource Include="test_resources\firefox_user_agent_strings.yaml" Link="TestResources\firefox_user_agent_strings.yaml" />
     <EmbeddedResource Include="test_resources\pgts_browser_list-orig.yaml" Link="TestResources\pgts_browser_list-orig.yaml" />
     <EmbeddedResource Include="test_resources\pgts_browser_list.yaml" Link="TestResources\pgts_browser_list.yaml" />
+    <EmbeddedResource Include="test_resources\opera_mini_user_agent_strings.yaml" Link="TestResources\opera_mini_user_agent_strings.yaml" />
+    <EmbeddedResource Include="test_resources\podcasting_user_agent_strings.yaml" Link="TestResources\podcasting_user_agent_strings.yaml" />
     <EmbeddedResource Include="Regexes\backtracking.yaml" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
     <PackageReference Include="AwesomeAssertions" Version="9.6.0" />
+    <PackageReference Include="coverlet.collector" Version="6.0.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="NUnit" Version="5.0.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="6.3.1" />
     <PackageReference Include="YamlDotNet" Version="18.1.0" />
