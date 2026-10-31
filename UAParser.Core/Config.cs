@@ -71,7 +71,7 @@ internal class Config
         return Parsers.Device(regex, device, brand, model);
     }
 
-    private Regex Regex(string regex, string key, string regexFlag = null)
+    private TieredRegex Regex(string regex, string key, string regexFlag = null)
     {
         var pattern = regex
                       ?? throw new ArgumentNullException(
@@ -97,6 +97,8 @@ internal class Config
             options |= RegexOptions.Compiled;
         }
 
-        return new Regex(pattern, options, this._options.MatchTimeOut);
+        return new TieredRegex(
+            new Regex(pattern, options, this._options.MatchTimeOut),
+            this._options.CompileFrequentlyUsedRegex);
     }
 }

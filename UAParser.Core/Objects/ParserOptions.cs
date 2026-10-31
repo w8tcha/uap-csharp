@@ -30,6 +30,13 @@ public sealed class ParserOptions
     public bool UseCompiledRegex { get; set; }
 
     /// <summary>
+    /// If true, regular expressions that are used frequently are compiled in the background, so
+    /// the startup time stays low while the throughput of common user agents is high. This has no
+    /// effect if <see cref="UseCompiledRegex"/> is true. The default is true.
+    /// </summary>
+    public bool CompileFrequentlyUsedRegex { get; set; } = true;
+
+    /// <summary>
     /// Allows for specifying the maximum time spent on regular expressions,
     /// serving as a fail safe for potential infinite backtracking. The default is
     /// set to Regex.InfiniteMatchTimeout

@@ -38,7 +38,7 @@ internal static class Parsers
 
     // ReSharper disable once InconsistentNaming
     public static Func<string, OS> OS(
-        Regex regex,
+        TieredRegex regex,
         string osReplacement,
         string v1Replacement,
         string v2Replacement,
@@ -106,7 +106,7 @@ internal static class Parsers
 
     // ReSharper disable once InconsistentNaming
     private static Func<string, OS> OSWithFamilySecond(
-        Regex regex,
+        TieredRegex regex,
         string osReplacement,
         string v1Replacement,
         string v2Replacement,
@@ -129,7 +129,7 @@ internal static class Parsers
     }
 
     public static Func<string, Device> Device(
-        Regex regex,
+        TieredRegex regex,
         string familyReplacement,
         string brandReplacement,
         string modelReplacement)
@@ -144,7 +144,7 @@ internal static class Parsers
     }
 
     public static Func<string, Browser> UserAgent(
-        Regex regex,
+        TieredRegex regex,
         string familyReplacement,
         string majorReplacement,
         string minorReplacement,
@@ -245,7 +245,7 @@ internal static class Parsers
     }
 
     private static Func<string, T> Create<T>(
-        Regex regex,
+        TieredRegex regex,
         Binder<T> binder)
     {
         return input =>
