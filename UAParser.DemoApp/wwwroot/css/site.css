@@ -1,0 +1,238 @@
+:root {
+    --ua-accent: #6366f1;
+    --ua-accent-2: #22d3ee;
+    --ua-bg: #0b0d14;
+    --ua-surface: rgba(255, 255, 255, 0.04);
+    --ua-surface-hover: rgba(255, 255, 255, 0.07);
+    --ua-border: rgba(255, 255, 255, 0.09);
+    --ua-muted: #9aa3b5;
+    --ua-text: #e6e9f0;
+    --bs-body-font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+html, body {
+    min-height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background:
+        radial-gradient(900px 500px at 15% -10%, rgba(99, 102, 241, 0.22), transparent 60%),
+        radial-gradient(700px 400px at 95% 0%, rgba(34, 211, 238, 0.12), transparent 60%),
+        var(--ua-bg);
+    background-attachment: fixed;
+    color: var(--ua-text);
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+/* Navbar */
+.ua-nav {
+    backdrop-filter: blur(12px);
+    background: rgba(11, 13, 20, 0.6);
+    border-bottom: 1px solid var(--ua-border);
+}
+
+.ua-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ua-text) !important;
+}
+
+.ua-logo {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.6rem;
+    background: linear-gradient(135deg, var(--ua-accent), var(--ua-accent-2));
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 800;
+}
+
+.ua-nav .nav-link {
+    color: var(--ua-muted);
+}
+
+.ua-nav .nav-link:hover,
+.ua-nav .nav-link.active {
+    color: var(--ua-text);
+}
+
+/* Hero */
+.ua-hero {
+    padding: 4rem 0 2.5rem;
+    text-align: center;
+}
+
+.ua-eyebrow {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    border: 1px solid var(--ua-border);
+    border-radius: 999px;
+    background: var(--ua-surface);
+    color: var(--ua-muted);
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.ua-hero h1 {
+    margin: 1.25rem 0 0.75rem;
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+}
+
+.ua-gradient-text {
+    background: linear-gradient(90deg, #a5b4fc, var(--ua-accent-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.ua-hero p {
+    max-width: 38rem;
+    margin: 0 auto;
+    color: var(--ua-muted);
+    font-size: 1.1rem;
+}
+
+/* Cards */
+.ua-card {
+    height: 100%;
+    padding: 1.5rem;
+    border: 1px solid var(--ua-border);
+    border-radius: 1rem;
+    background: var(--ua-surface);
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.ua-card:hover {
+    background: var(--ua-surface-hover);
+    border-color: rgba(99, 102, 241, 0.4);
+    transform: translateY(-2px);
+}
+
+.ua-icon {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    margin-bottom: 1rem;
+    border-radius: 0.75rem;
+    background: rgba(99, 102, 241, 0.15);
+    color: #a5b4fc;
+}
+
+.ua-label {
+    margin-bottom: 0.25rem;
+    color: var(--ua-muted);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.ua-value {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    word-break: break-word;
+}
+
+.ua-sub {
+    margin-top: 0.25rem;
+    color: var(--ua-muted);
+    font-size: 0.9rem;
+}
+
+/* Section */
+.ua-section-title {
+    margin: 2.5rem 0 1rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+/* Details table */
+.ua-table {
+    --bs-table-bg: transparent;
+    margin: 0;
+}
+
+.ua-table th {
+    width: 35%;
+    color: var(--ua-muted);
+    font-weight: 500;
+}
+
+.ua-table td {
+    font-family: var(--bs-font-monospace);
+    font-size: 0.9rem;
+}
+
+.ua-table tr:last-child th,
+.ua-table tr:last-child td {
+    border-bottom: 0;
+}
+
+.ua-empty {
+    color: var(--ua-muted);
+    font-style: italic;
+    font-family: var(--bs-body-font-family);
+}
+
+/* Raw UA string */
+.ua-raw {
+    position: relative;
+    padding: 1.25rem 4.5rem 1.25rem 1.25rem;
+    border: 1px solid var(--ua-border);
+    border-radius: 1rem;
+    background: rgba(0, 0, 0, 0.35);
+}
+
+.ua-raw code {
+    color: #c7d2fe;
+    font-size: 0.9rem;
+    word-break: break-all;
+}
+
+.ua-copy {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+}
+
+.ua-badge-spider {
+    background: rgba(251, 191, 36, 0.15);
+    color: #fbbf24;
+    border: 1px solid rgba(251, 191, 36, 0.35);
+}
+
+/* Footer */
+.ua-footer {
+    margin-top: 4rem;
+    padding: 1.5rem 0;
+    border-top: 1px solid var(--ua-border);
+    color: var(--ua-muted);
+    font-size: 0.875rem;
+}
+
+.ua-footer a {
+    color: var(--ua-muted);
+    text-decoration: none;
+}
+
+.ua-footer a:hover {
+    color: var(--ua-text);
+}

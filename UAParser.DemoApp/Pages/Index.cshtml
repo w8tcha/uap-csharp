@@ -1,44 +1,130 @@
 ﻿@page
 @model IndexModel
 @{
-	ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Home page";
 }
 
 @inject Interfaces.IUserAgentParser Parser
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@{
+    var info = Parser.ClientInfo;
+    var browser = info.Browser;
+    var os = info.OS;
+    var device = info.Device;
 
-<div class="card">
-    <div class="card-body">
-        <table class="table table-striped">
-            <caption>User Agent Info</caption>
-            <tbody>
-            <tr>
-                <th scope="row">Browser Name</th>
-                <td>@Parser.ClientInfo.Browser.Family</td>
-            </tr>
-            <tr>
-                <th scope="row">Browser Version</th>
-                <td>@Parser.ClientInfo.Browser.Version</td>
-            </tr>
-            <tr>
-                <th scope="row">Device type</th>
-                <td colspan="2">@Parser.ClientInfo.Device.ToString()</td>
-            </tr>
-            <tr>
-                <th scope="row">OS</th>
-                <td colspan="2">@Parser.ClientInfo.OS.Family</td>
-            </tr>
-            <tr>
-                <th scope="row">User-agent header</th>
-                <td colspan="2">@Parser.ClientInfo.String</td>
-            </tr>
-            </tbody>
-        </table>
+    static bool Has(string value) => !string.IsNullOrEmpty(value);
+    var osVersion = string.Join(".", new[] { os.Major, os.Minor, os.Patch, os.PatchMinor }.Where(Has));
+    var deviceDetail = string.Join(" ", new[] { device.Brand, device.Model }.Where(Has));
+}
 
+<section class="ua-hero">
+    <span class="ua-eyebrow">User-agent parser demo</span>
+    <h1>
+        You're on <span class="ua-gradient-text">@browser.Family</span><br />
+        running <span class="ua-gradient-text">@os.Family</span>
+    </h1>
+    <p>This is what UAParser extracted from the <code>User-Agent</code> header your browser sent with this request.</p>
+</section>
 
+<div class="row g-3">
+    <div class="col-md-4">
+        <div class="ua-card">
+            <div class="ua-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            </div>
+            <div class="ua-label">Browser</div>
+            <p class="ua-value">@browser.Family</p>
+            <div class="ua-sub">@(Has(browser.Version) ? $"Version {browser.Version}" : "Version unknown")</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="ua-card">
+            <div class="ua-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+            </div>
+            <div class="ua-label">Operating system</div>
+            <p class="ua-value">@os.Family</p>
+            <div class="ua-sub">@(Has(osVersion) ? $"Version {osVersion}" : "Version unknown")</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="ua-card">
+            <div class="ua-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+            </div>
+            <div class="ua-label">Device</div>
+            <p class="ua-value">
+                @device.Family
+                @if (device.IsSpider)
+                {
+                    <span class="badge ua-badge-spider align-middle fs-6 ms-1">Bot</span>
+                }
+            </p>
+            <div class="ua-sub">@(Has(deviceDetail) ? deviceDetail : "No brand or model detected")</div>
+        </div>
     </div>
 </div>
+
+<h2 class="ua-section-title">Raw User-Agent header</h2>
+<div class="ua-raw">
+    <code id="ua-string">@info.String</code>
+    <button type="button" class="btn btn-sm btn-outline-secondary ua-copy" id="ua-copy">Copy</button>
+</div>
+
+<h2 class="ua-section-title">Parsed details</h2>
+<div class="ua-card p-0 overflow-hidden">
+    <table class="table ua-table">
+        <caption class="visually-hidden">Parsed user-agent details</caption>
+        <tbody>
+            @{
+                var rows = new (string Label, string Value)[]
+                {
+                    ("Browser family", browser.Family),
+                    ("Browser major", browser.Major),
+                    ("Browser minor", browser.Minor),
+                    ("Browser patch", browser.Patch),
+                    ("OS family", os.Family),
+                    ("OS major", os.Major),
+                    ("OS minor", os.Minor),
+                    ("OS patch", os.Patch),
+                    ("OS patch minor", os.PatchMinor),
+                    ("Device family", device.Family),
+                    ("Device brand", device.Brand),
+                    ("Device model", device.Model),
+                    ("Is spider", device.IsSpider ? "true" : "false"),
+                };
+            }
+            @foreach (var row in rows)
+            {
+                <tr>
+                    <th scope="row" class="ps-4">@row.Label</th>
+                    <td class="pe-4">
+                        @if (Has(row.Value))
+                        {
+                            @row.Value
+                        }
+                        else
+                        {
+                            <span class="ua-empty">—</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('ua-copy').addEventListener('click', async (e) => {
+            const btn = e.currentTarget;
+            try {
+                await navigator.clipboard.writeText(document.getElementById('ua-string').textContent);
+                btn.textContent = 'Copied!';
+            } catch {
+                btn.textContent = 'Failed';
+            }
+            setTimeout(() => btn.textContent = 'Copy', 1500);
+        });
+    </script>
+}
