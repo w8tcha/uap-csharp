@@ -86,6 +86,20 @@ Example usage in view code
 
 ```
 
+**Optional: detect Windows 11.** Windows 11 browsers still send `Windows NT 10.0` in the User-Agent string, so the
+string alone reports Windows 10. Chromium based browsers (Edge, Chrome, Opera) can report the real version through the
+`Sec-CH-UA-Platform-Version` [client hint](https://learn.microsoft.com/microsoft-edge/web-platform/how-to-detect-win11),
+but only when the server asks for it. Add the middleware to request it:
+
+```c#
+app.UseUserAgentClientHints();
+```
+
+This sends `Accept-CH` and `Critical-CH` response headers (pass `critical: false` to skip `Critical-CH`, then the hint is
+only available from the second request on). When the hint reports Windows 11, `ClientInfo.OS` is `Windows 11`
+(`Major` = `"11"`). Client hints are only sent over HTTPS; Firefox and Safari don't send them, so they keep reporting
+Windows 10. If you cache responses that depend on the OS, add `Sec-CH-UA-Platform-Version` to the `Vary` header.
+
 Example usage in custom middlware
 
 You can inject the `IUserAgentParser` to the `InvokeAsync` method.

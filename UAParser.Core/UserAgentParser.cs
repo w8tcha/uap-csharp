@@ -84,7 +84,11 @@ public sealed class UserAgentParser : IUserAgentParser
 
         // The injected cache is used here rather than inside the shared parser, so every instance
         // honors its own cache instead of the one passed to the first instance.
-        return this._cache.GetOrCreate(userAgent, _ => uaParser.Parse(userAgent));
+        var clientInfo = this._cache.GetOrCreate(userAgent, _ => uaParser.Parse(userAgent));
+
+        // Client hints are applied after the cache lookup: Windows 10 and Windows 11 send the same
+        // User-Agent string, so the cached entry must stay the hint-free result.
+        return ClientHints.Apply(clientInfo, this._httpContextAccessor.HttpContext.Request.Headers);
     }
 
     private static Parser GetCompiledParser()

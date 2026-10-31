@@ -36,6 +36,10 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Ask Chromium based browsers for the platform version client hint, so Windows 11 can be detected.
+app.UseUserAgentClientHints();
+
 app.UseStaticFiles();
 
 app.UseRouting();
