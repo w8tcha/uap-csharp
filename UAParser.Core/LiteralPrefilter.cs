@@ -335,9 +335,10 @@ internal sealed class LiteralPrefilter
         if (input.Length == 0 || !prefixes.TryGetValue(char.ToLowerInvariant(input[0]), out var candidates))
             return false;
 
-        foreach (var prefix in candidates)
+        // an indexed loop instead of Any() avoids allocating a closure on this hot path
+        for (var i = 0; i < candidates.Length; i++)
         {
-            if (input.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+            if (input.StartsWith(candidates[i], StringComparison.OrdinalIgnoreCase))
                 return true;
         }
 

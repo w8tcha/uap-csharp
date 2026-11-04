@@ -87,8 +87,7 @@ internal static class RequiredLiterals
     /// </summary>
     public static (List<string[]> Requirements, string[] Prefixes) Analyze(string pattern)
     {
-        var alternatives = Parse(pattern);
-        if (alternatives is null)
+        if (!TryParse(pattern, out var alternatives))
             return (null, null);
 
         var requirements = Alternation(alternatives).Requirements;
@@ -114,20 +113,25 @@ internal static class RequiredLiterals
             .ThenBy(r => r.Length);
     }
 
-    private static List<List<Node>> Parse(string pattern)
+    private static bool TryParse(string pattern, out List<List<Node>> alternatives)
     {
+        alternatives = null;
         if (string.IsNullOrEmpty(pattern))
-            return null;
+            return false;
 
         try
         {
             var pos = 0;
-            var alternatives = ParseAlternation(pattern, ref pos);
-            return pos == pattern.Length ? alternatives : null;
+            var parsed = ParseAlternation(pattern, ref pos);
+            if (pos != pattern.Length)
+                return false;
+
+            alternatives = parsed;
+            return true;
         }
         catch (NotSupportedException)
         {
-            return null;
+            return false;
         }
     }
 
@@ -193,8 +197,7 @@ internal static class RequiredLiterals
                 continue;
             }
 
-            var combined = Concat(run, info.Exact, MaxSetSize);
-            if (combined is null)
+            if (!TryConcat(run, info.Exact, MaxSetSize, out var combined))
             {
                 Flush();
                 exact = false;
@@ -228,13 +231,11 @@ internal static class RequiredLiterals
             if (node.Kind == NodeKind.Group && node.Min >= 1 && Atom(node).Exact is null)
             {
                 var leading = node.Alternatives.SelectMany(LeadingStrings).ToHashSet();
-                return Concat(run, leading, MaxPrefixes) ?? run;
+                return TryConcat(run, leading, MaxPrefixes, out var withLeading) ? withLeading : run;
             }
 
             var info = Quantified(node, out var repeated);
-            var combined = info.Exact is null ? null : Concat(run, info.Exact, MaxPrefixes);
-
-            if (combined is null)
+            if (info.Exact is null || !TryConcat(run, info.Exact, MaxPrefixes, out var combined))
                 return run;
 
             run = combined;
@@ -256,11 +257,10 @@ internal static class RequiredLiterals
 
         // a small, bounded repetition of a finite set is a finite set as well, e.g. " {0,2}"
         // matches "", " " or "  "
-        if (info.Exact is not null && node.Max <= MaxRepetitions)
+        if (info.Exact is not null && node.Max <= MaxRepetitions
+            && TryRepetitions(info.Exact, node.Min, node.Max, out var repetitions))
         {
-            var repetitions = Repetitions(info.Exact, node.Min, node.Max);
-            if (repetitions is not null)
-                return Info.ForExact(repetitions);
+            return Info.ForExact(repetitions);
         }
 
         if (node.Min == 0)
@@ -273,11 +273,12 @@ internal static class RequiredLiterals
     }
 
     /// <summary>
-    /// All strings made of <paramref name="min"/> to <paramref name="max"/> strings of the set, or
-    /// <c>null</c> if there are too many.
+    /// All strings made of <paramref name="min"/> to <paramref name="max"/> strings of the set.
+    /// Returns <c>false</c> if there are too many.
     /// </summary>
-    private static HashSet<string> Repetitions(HashSet<string> set, int min, int max)
+    private static bool TryRepetitions(HashSet<string> set, int min, int max, out HashSet<string> repetitions)
     {
+        repetitions = null;
         var copies = EmptyString;
         var all = new HashSet<string>();
 
@@ -287,13 +288,14 @@ internal static class RequiredLiterals
                 all.UnionWith(copies);
 
             if (all.Count > MaxSetSize)
-                return null;
+                return false;
 
-            if (count < max && (copies = Concat(copies, set, MaxSetSize)) is null)
-                return null;
+            if (count < max && !TryConcat(copies, set, MaxSetSize, out copies))
+                return false;
         }
 
-        return all;
+        repetitions = all;
+        return true;
     }
 
     private static Info Atom(Node node)
@@ -307,19 +309,20 @@ internal static class RequiredLiterals
         };
     }
 
-    private static HashSet<string> Concat(HashSet<string> left, HashSet<string> right, int limit)
+    private static bool TryConcat(HashSet<string> left, HashSet<string> right, int limit, out HashSet<string> result)
     {
+        result = null;
         if ((long)left.Count * right.Count > limit)
-            return null;
+            return false;
 
-        var result = new HashSet<string>(left.Count * right.Count);
+        result = new HashSet<string>(left.Count * right.Count);
         foreach (var l in left)
         {
             foreach (var r in right)
                 result.Add(l + r);
         }
 
-        return result;
+        return true;
     }
 
     private static List<List<Node>> ParseAlternation(string pattern, ref int pos)
