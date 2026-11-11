@@ -20,7 +20,7 @@ embedded in the assembly, so it works out of the box.
 - Fast: a literal prefilter skips regexes that cannot match, and frequently used regexes are compiled in the background
 - Optional result caching through `IMemoryCache`
 - Load your own, newer regex definitions at runtime
-- Targets .NET 9 and .NET 10
+- Targets .NET 10 and .NET 11
 
 ## Installation
 
